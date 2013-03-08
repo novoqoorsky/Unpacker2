@@ -348,7 +348,7 @@ void Unpacker2::DistributeEvents(string f) {
       file->ignore(align8(eventSize) - eventSize);
       
       // check the end of loop conditions
-      if(file->eof() == true || file->tellg() == fileSize) { break; }
+      if((file->eof() == true) || (file->tellg() == fileSize)) { break; }
       if(analyzedEvents == eventsToAnalyze) { break; }
     }
 

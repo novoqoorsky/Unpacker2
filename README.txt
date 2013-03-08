@@ -7,7 +7,9 @@ Tool to unpack the HADES-like .hld binary data into ROOT tree structure.
 
 Installation:
 - Download the Unpacker2 directory
-- run make in the tinyxml directory
+- compile in the tinyxml directory
+  - g++ -c tinyxml2.cpp
+  - ar rvs tinyxml2.a tinyxml2.o
 - run make in the Unpacker2 directory
 
 - Download the tools2 directory

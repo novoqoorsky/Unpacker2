@@ -15,6 +15,7 @@ private:
   Int_t trailTimes[MAX_HITS];
   Int_t leadsNum;
   Int_t trailsNum;
+  Int_t tot;
   
 public:
 
@@ -33,6 +34,7 @@ public:
   Int_t GetTrailsNum() { return trailsNum; }
   Int_t GetLeadTime(int mult) { return leadTimes[mult]; }
   Int_t GetTrailTime(int mult) { return trailTimes[mult]; }
+  Int_t GetTot() { return tot; }
   
   ClassDef(TDCHit,1);
 };

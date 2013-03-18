@@ -11,6 +11,7 @@ TDCHit::TDCHit() {
   trailTime1 = -100000;
   leadsNum = 0;
   trailsNum = 0;
+  tot = -1000;
   for (int i = 0; i < MAX_HITS; i++) {
     leadTimes[i] = -100000;
     trailTimes[i] = -100000;
@@ -32,8 +33,12 @@ void TDCHit::AddLeadTime(Int_t time) {
 void TDCHit::AddTrailTime(Int_t time) {
   trailTimes[trailsNum] = time;
   
-  if (trailsNum == 0)
+  if (trailsNum == 0) {
     trailTime1 = time;
+    
+    if (leadsNum == 1)
+      tot = trailTime1 - leadTime1;
+  }
   
   trailsNum++;
 }

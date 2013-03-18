@@ -33,12 +33,12 @@ void TDCHit::AddLeadTime(Int_t time) {
 void TDCHit::AddTrailTime(Int_t time) {
   trailTimes[trailsNum] = time;
   
-  if (trailsNum == 0) {
+  if (trailsNum == 0)
     trailTime1 = time;
-    
-    if (leadsNum == 1)
-      tot = trailTime1 - leadTime1;
-  }
   
   trailsNum++;
+}
+
+void TDCHit::AddTot(Int_t time) {
+  tot = time;
 }

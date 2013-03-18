@@ -13,6 +13,8 @@ private:
   
   int channelNumber;
   
+  bool* firstLeadCorrect;
+  
 public:
   
   Unpacker_HPTDC_HR() { }
@@ -27,6 +29,7 @@ public:
   UInt_t GetLeadMult(int channel) { return leadMult[channel]; }
   UInt_t GetTrailTime(int channel, int mult) { return trailTimes[channel][mult]; }
   UInt_t GetTrailMult(int channel) { return trailMult[channel]; }
+  bool GetFirstLeadCorrect(int channel) { return firstLeadCorrect[channel]; }
   
   void Clear();
   

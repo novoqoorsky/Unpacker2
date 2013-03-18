@@ -16,12 +16,16 @@ Unpacker_HPTDC_HR::Unpacker_HPTDC_HR(string bT, string bA, string hA, int cN, in
   leadMult = new UInt_t[channelNumber];
   trailMult = new UInt_t[channelNumber];
   
+  firstLeadCorrect = new bool[channelNumber];
+  
   for(int i = 0; i < channelNumber; i++) {
     leadTimes[i] = new UInt_t[1000];
     trailTimes[i] = new UInt_t[1000];
     leadMult[i] = 0;
     trailMult[i] = 0;
+    firstLeadCorrect[i] = false;
   }
+  
   
   cerr<<"HPTDC_HR: Creating Unpacker_HPTDC_HR for board type: "<<bT<<" board address "<<bA<<" hub address "<<hA<<" number of channels "<<channelNumber<<endl;
 }
@@ -36,9 +40,13 @@ Unpacker_HPTDC_HR::~Unpacker_HPTDC_HR() {
   delete [] trailMult;
   delete [] leadTimes;
   delete [] trailTimes;
+  delete [] firstLeadCorrect;
 }
 
 void Unpacker_HPTDC_HR::Clear() {
+  
+  delete [] firstLeadCorrect;
+  
   for(int i = 0; i < channelNumber; i++) {
     delete [] leadTimes[i];
     delete [] trailTimes[i];
@@ -46,6 +54,7 @@ void Unpacker_HPTDC_HR::Clear() {
     trailTimes[i] = new UInt_t[1000];
     leadMult[i] = 0;
     trailMult[i] = 0;
+    firstLeadCorrect[i] = false;
   }
 }
 
@@ -75,6 +84,10 @@ void Unpacker_HPTDC_HR::ProcessEvent(UInt_t* data) {
       channel = (data_i >> 19) & 0x1f;
       time = data_i & 0x7ffff;
       leadTimes[channel][leadMult[channel]] = time;
+      
+      if (leadMult[channel] == 0 && trailMult[channel] == 0)
+	firstLeadCorrect[channel] = true;
+      
       //if(debugMode == true)
 	//cerr<<"HPTDC_HR: LeadTime found on channel "<<channel<<" with value "<<time<<endl;
       leadMult[channel]++;

@@ -26,6 +26,7 @@ public:
   
   void AddLeadTime(Int_t time);
   void AddTrailTime(Int_t time);
+  void AddTot(Int_t time);
   
   Int_t GetChannel() { return channel; }
   Int_t GetLeadTime1() { return leadTime1; }

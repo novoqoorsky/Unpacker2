@@ -102,6 +102,9 @@ void Unpacker_TRB2::GetTDCHits() {
 	    for(UInt_t j = 0; j < iter->second->GetTrailMult(i); j++)
 	      hit->AddTrailTime(iter->second->GetTrailTime(i, j));
 	  }
+	  
+	  if(iter->second->GetFirstLeadCorrect(i) == true && iter->second->GetTrailMult(i) > 0)
+	    hit->AddTot(iter->second->GetTrailTime(i, 0) - iter->second->GetLeadTime(i, 0));
 	}
 	
       }

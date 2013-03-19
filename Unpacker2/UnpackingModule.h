@@ -71,6 +71,7 @@ public:
   virtual UInt_t GetTrailTime(int channel, int mult) { return -1; }
   virtual UInt_t GetTrailMult(int channel) { return -1; }
   virtual void SetReferenceChannel(int t) {}
+  virtual bool GetFirstLeadCorrect(int channel) { return false; }
   
   // part of ADC unpacking interface
   virtual Int_t GetSample(Int_t channel, Int_t sampleNr) {return -1; }

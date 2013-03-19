@@ -45,8 +45,6 @@ Unpacker_HPTDC_HR::~Unpacker_HPTDC_HR() {
 
 void Unpacker_HPTDC_HR::Clear() {
   
-  delete [] firstLeadCorrect;
-  
   for(int i = 0; i < channelNumber; i++) {
     delete [] leadTimes[i];
     delete [] trailTimes[i];

@@ -79,8 +79,8 @@ void Unpacker_TRB2_Standalone::GetTDCHits() {
 	      hit->AddTrailTime(iter->second->GetTrailTime(i, j));
 	  }
 	  
-	  if(iter->second->GetFirstLeadCorrect(i) == true)
-	    hit->AddTot(iter->second->GetTrailTime(i, 0) - iter->second->GetLeadTime(i, 0));
+	  //if(iter->second->GetFirstLeadCorrect(i) == true)
+	    //hit->AddTot(iter->second->GetTrailTime(i, 0) - iter->second->GetLeadTime(i, 0));
 	}
 	
       }

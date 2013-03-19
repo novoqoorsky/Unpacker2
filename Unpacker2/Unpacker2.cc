@@ -338,7 +338,11 @@ void Unpacker2::DistributeEvents(string f) {
       
       newTree->Fill();
       
+      if(analyzedEvents % 10000 == 0)
+	cerr<<analyzedEvents<<endl;
+      
       analyzedEvents++;
+      
       event->Clear();
       
       if(debugMode == true) {

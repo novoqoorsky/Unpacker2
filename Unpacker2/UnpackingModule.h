@@ -6,6 +6,7 @@
 #include <string>
 #include <map>
 #include "Event.h"
+#include <sstream>
 
 using namespace std;
 
@@ -19,6 +20,7 @@ private:
   int channelOffset;
   int resolution;
   string measurementType;
+  size_t entireEventSize;
   
   bool invertBytes;
   
@@ -31,7 +33,12 @@ public:
   ~UnpackingModule() {}
   
   void AddUnpacker(std::string s, UnpackingModule* u) { internalUnpackers[s] = u; }
-  UnpackingModule* GetUnpacker(std::string s) { return internalUnpackers[s]; }
+  UnpackingModule* GetUnpacker(std::string s) { 
+    if (internalUnpackers.count(s) == 1)
+      return internalUnpackers[s];
+    else
+      return NULL;
+  }
   
   void SetBoardType(string t) { boardType = t; }
   void SetBoardAddress(string t) { boardAddress = t; }
@@ -40,6 +47,7 @@ public:
   void SetResolution(int t) { resolution = t; }
   void SetMeasurementType(string t) { measurementType = t; }
   void SetInvertBytes(bool dec) { invertBytes = dec; }
+  void SetEntireEventSize(size_t s) { entireEventSize = s; }
   
   string GetBoardType() { return boardType; }
   string GetBoardAddress() { return boardAddress; }
@@ -49,6 +57,7 @@ public:
   int GetResolution() { return resolution; }
   string GetMeasurementType() { return measurementType; }
   bool GetInvertBytes() { return invertBytes; }
+  size_t GetEntireEventSize() { return entireEventSize; }
   
   virtual void ProcessEvent(UInt_t* data);
   virtual void ProcessEvent(UInt_t* data, Event* evt);
@@ -60,19 +69,27 @@ public:
   
   virtual void Clear();
  
-  string UIntToString(UInt_t t) { char buf[4]; sprintf(buf, "%04X", t); return string(buf); }
+  string UIntToString(UInt_t t);
   
   map<std::string, UnpackingModule*>::iterator GetInternalUnpackersIterBegin() { return internalUnpackers.begin(); }
   map<std::string, UnpackingModule*>::iterator GetInternalUnpackersIterEnd() { return internalUnpackers.end(); }
-  
-  // part of TDC unpacking interface
-  virtual UInt_t GetLeadTime(int channel, int mult) { return -1; }
-  virtual UInt_t GetLeadMult(int channel) { return -1; }
-  virtual UInt_t GetTrailTime(int channel, int mult) { return -1; }
-  virtual UInt_t GetTrailMult(int channel) { return -1; }
+
+
+  // part of Lattice_TDC unpacking interface
+  virtual int GetLeadMult(int channel) { return -1; }
+  virtual int GetLeadFineTime(int channel, int mult) { return -1; }
+  virtual int GetLeadCoarseTime(int channel, int mult) { return -1; }
+  virtual int GetLeadEpoch(int channel, int mult) { return -1; }
+
+  virtual int GetTrailMult(int channel) { return -1; }
+  virtual int GetTrailFineTime(int channel, int mult) { return -1; }
+  virtual int GetTrailCoarseTime(int channel, int mult) { return -1; }
+  virtual int GetTrailEpoch(int channel, int mult) { return -1; }
+
   virtual void SetReferenceChannel(int t) {}
-  virtual bool GetFirstLeadCorrect(int channel) { return false; }
-  
+  virtual UInt_t GetErrorBits() { return -1; }
+
+
   // part of ADC unpacking interface
   virtual Int_t GetSample(Int_t channel, Int_t sampleNr) {return -1; }
   virtual Int_t GetDspSum(Int_t channel) {return -1; }

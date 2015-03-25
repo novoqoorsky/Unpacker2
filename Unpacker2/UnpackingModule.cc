@@ -42,3 +42,13 @@ UInt_t UnpackingModule::ReverseHex(UInt_t n) {
   
   return e;
 }
+
+string UnpackingModule::UIntToString(UInt_t t) {
+  string s = "0000";
+  stringstream sstream;
+  sstream<<hex<<t;
+  
+  s = s.replace(4 - sstream.str().length(), sstream.str().length(), sstream.str());
+  
+  return s;  
+}

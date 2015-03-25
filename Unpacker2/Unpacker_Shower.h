@@ -19,7 +19,7 @@ public:
   void GetADCHits();
   void GetTDCHits();
   
-  void SayHi() { cerr<<"Hi from Shower"<<endl; }
+  void SayHi() { cerr<<"SHW: Hi from Shower"<<endl; }
   
   void Clear() {}
   

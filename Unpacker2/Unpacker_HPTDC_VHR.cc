@@ -11,14 +11,14 @@ Unpacker_HPTDC_VHR::Unpacker_HPTDC_VHR(string bT, string bA, string hA, int cN, 
   
   useInlCorrections = false;
   
-  leadTimes = new UInt_t*[channelNumber];
-  trailTimes = new UInt_t*[channelNumber];
-  leadMult = new UInt_t[channelNumber];
-  trailMult = new UInt_t[channelNumber];
+  leadTimes = new float*[channelNumber];
+  trailTimes = new float*[channelNumber];
+  leadMult = new int[channelNumber];
+  trailMult = new int[channelNumber];
   
   for(int i = 0; i < channelNumber; i++) {
-    leadTimes[i] = new UInt_t[1000];
-    trailTimes[i] = new UInt_t[1000];
+    leadTimes[i] = new float[1000];
+    trailTimes[i] = new float[1000];
     leadMult[i] = 0;
     trailMult[i] = 0;
   }
@@ -42,8 +42,8 @@ void Unpacker_HPTDC_VHR::Clear() {
   for(int i =0; i < channelNumber; i++) {
     delete [] leadTimes[i];
     delete [] trailTimes[i];
-    leadTimes[i] = new UInt_t[1000];
-    trailTimes[i] = new UInt_t[1000];
+    leadTimes[i] = new float[1000];
+    trailTimes[i] = new float[1000];
     leadMult[i] = 0;
     trailMult[i] = 0;
   }

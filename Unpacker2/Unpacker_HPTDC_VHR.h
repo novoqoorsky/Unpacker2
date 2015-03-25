@@ -8,10 +8,10 @@
 class Unpacker_HPTDC_VHR : public UnpackingModule {
   
 private:
-  UInt_t** leadTimes;
-  UInt_t** trailTimes;
-  UInt_t* leadMult;
-  UInt_t* trailMult;
+  float** leadTimes;
+  float** trailTimes;
+  int* leadMult;
+  int* trailMult;
     
   int channelNumber;
   
@@ -28,10 +28,10 @@ public:
   
   void SayHi() { cerr<<"HTPDC_VHR: Hi from HPTDC_VHR"<<endl; }
   
-  UInt_t GetLeadTime(int channel, int mult) { return leadTimes[channel][mult]; }
-  UInt_t GetLeadMult(int channel) { return leadMult[channel]; }
-  UInt_t GetTrailTime(int channel, int mult) { return trailTimes[channel][mult]; }
-  UInt_t GetTrailMult(int channel) { return trailMult[channel]; }
+  float GetLeadTime(int channel, int mult) { return leadTimes[channel][mult]; }
+  int GetLeadMult(int channel) { return leadMult[channel]; }
+  float GetTrailTime(int channel, int mult) { return trailTimes[channel][mult]; }
+  int GetTrailMult(int channel) { return trailMult[channel]; }
   
   void SetInlCorrection(const char* correctionsFile);
   

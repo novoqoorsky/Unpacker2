@@ -6,6 +6,7 @@
 #include <TClonesArray.h>
 #include "TDCHit.h"
 #include "ADCHit.h"
+#include "TDCHitExtended.h"
 #include <iostream>
 
 using namespace std;
@@ -18,7 +19,8 @@ class Event : public TObject {
 private:
   Int_t totalNTDCHits;
   Int_t totalNADCHits;
-  Int_t TDCReferenceTime;
+  float TDCReferenceTime;
+  UInt_t errorBits;
   
 public:
   TClonesArray* TDCHits;
@@ -28,13 +30,16 @@ public:
   virtual ~Event() { Clear(); }
   
   TDCHit* AddTDCHit(int channel);
+	TDCHitExtended* AddTDCHitExtended(int channel);
   ADCHit* AddADCHit(int channel);
   
-  void SetTDCReferenceTime(Int_t t) { TDCReferenceTime = t; }
+  void SetTDCReferenceTime(float t) { TDCReferenceTime = t; }
+  void SetErrorBits(UInt_t err) { errorBits = err; }
   
-  Int_t GetTotalNADCHits() { return totalNTDCHits; }
-  Int_t GetTotalNTDCHits() { return totalNADCHits; }
-  Int_t GetTDCReferenceTime() { return TDCReferenceTime; }
+  Int_t GetTotalNADCHits() { return totalNADCHits; }
+  Int_t GetTotalNTDCHits() { return totalNTDCHits; }
+  float GetTDCReferenceTime() { return TDCReferenceTime; }
+  UInt_t GetErrorBits() { return errorBits; }
   
   TClonesArray* GetTDCHitsArray() {return TDCHits;}
   TClonesArray* GetADCHitsArray() {return ADCHits;}

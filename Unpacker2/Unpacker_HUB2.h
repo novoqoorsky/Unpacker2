@@ -19,7 +19,7 @@ public:
   void GetADCHits();
   void GetTDCHits();
   
-  void SayHi() { cerr<<"Hi from HUB2"<<endl; }
+  void SayHi() { cerr<<"HUB2: Hi from HUB2"<<endl; }
   
   void Clear() {}
   

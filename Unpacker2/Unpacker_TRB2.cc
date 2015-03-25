@@ -34,7 +34,7 @@ void Unpacker_TRB2::ProcessEvent(UInt_t* data, Event* evt) {
   
   
   if(debugMode == true)
-    cerr<<"Unpacker_TRB2.cc: Receiving "<<dataSize<<" of bytes to analyze"<<endl;
+    cerr<<"Unpacker_TRB2.cc: Receiving "<<dataSize<<" words to analyze"<<endl;
   
   if (dataSize > 10000) {
     cerr<<"WARNING: event size too large, skipping event"<<endl;

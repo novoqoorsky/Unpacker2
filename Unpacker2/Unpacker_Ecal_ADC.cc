@@ -6,7 +6,7 @@ using namespace std;
 ClassImp(Unpacker_Ecal_ADC);
 
 Unpacker_Ecal_ADC::Unpacker_Ecal_ADC(string bT, string bA, string hA, int cN, int o, int r, string mR, bool dec, bool dbg) : UnpackingModule(bT, bA, hA, cN, o, r, mR, dec, dbg) {
-  cerr<<"ECAL: Creating Unpacker_Ecal_ADC for board type: "<<bT<<" board address "<<bA<<" hub address "<<hA<<endl;
+  cerr<<"ECAL_ADC: Creating Unpacker_Ecal_ADC for board type: "<<bT<<" board address "<<bA<<" hub address "<<hA<<endl;
 }
 
 void Unpacker_Ecal_ADC::ProcessEvent(UInt_t* data, Event* evt) {
@@ -38,9 +38,16 @@ void Unpacker_Ecal_ADC::ProcessEvent(UInt_t* data, Event* evt) {
     sampleNr = (data_i >> 16) & 0xff;
     sample = data_i & 0xfff;
     
-    if (sampleNr <= MAX_SAMPLES + 6)
-    {
+    if (sampleNr <= MAX_SAMPLES) {
       AddSample(channel, sampleNr, sample);
+      
+      if(debugMode == true)
+	cerr<<"ECAL_ADC: adding a sample: on channel "<<channel<<" nr "<<sampleNr<<" with value "<<sample<<endl;      
+    }
+    else if (sampleNr > MAX_SAMPLES && sampleNr <= MAX_SAMPLES + 6)
+    {
+      if(debugMode == true)
+	cerr<<"ECAL_ADC: adding a calc value: on channel "<<channel<<" nr "<<(sampleNr - MAX_SAMPLES)<<" with value "<<sample<<endl;
       
       switch(sampleNr)
       {

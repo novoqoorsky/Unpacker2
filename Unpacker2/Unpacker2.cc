@@ -1,8 +1,10 @@
 
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include "./tinyxml2-master/tinyxml2.h"
 #include <map>
+#include <cstdio>
 #include "Unpacker2.h"
 #include "Event.h"
 #include "ADCHit.h"
@@ -93,6 +95,7 @@ void Unpacker2::ParseConfigFile(string f, string s) {
   string type;
   string address;
   string hubAddress;
+  string correctionFile;
   int channels;
   int offset;
   int resolution;
@@ -108,7 +111,8 @@ void Unpacker2::ParseConfigFile(string f, string s) {
     address = string(element->FirstChildElement("TRBNET_ADDRESS")->GetText());
     hubAddress = string(element->FirstChildElement("HUB_ADDRESS")->GetText());
     referenceChannel = atoi(element->FirstChildElement("REFERENCE_CHANNEL")->GetText());
-  
+    correctionFile = string(element->FirstChildElement("CORRECTION_FILE")->GetText());
+    
     // create appropriate unpacking module
     if (type == "TRB2_S") { // standalone type
 	fullSetup = false;
@@ -231,6 +235,37 @@ void Unpacker2::ParseConfigFile(string f, string s) {
 	internalNode = internalNode->ToElement()->NextSibling();
       }
     }
+    else if (type == "TRB3_S") {
+      fullSetup = false;
+      //fullSetup = true;
+
+      m = new Unpacker_TRB3(type, address, hubAddress, 0, 0, 0, "", invertBytes, debugMode);
+      m->SetReferenceChannel(referenceChannel);
+
+      // create additional unpackers for internal modules 
+      node = element->FirstChildElement("MODULES")->FirstChildElement("MODULE");
+      while(true) {
+
+	if (node == 0)
+	  break;
+
+	type = string(node->ToElement()->FirstChildElement("TYPE")->GetText());
+	address = string(node->ToElement()->FirstChildElement("TRBNET_ADDRESS")->GetText());
+	channels = atoi(node->ToElement()->FirstChildElement("NUMBER_OF_CHANNELS")->GetText());
+	offset = atoi(node->ToElement()->FirstChildElement("CHANNEL_OFFSET")->GetText());
+	resolution = atoi(node->ToElement()->FirstChildElement("RESOLUTION")->GetText());
+	measurementType = string(node->ToElement()->FirstChildElement("MEASUREMENT_TYPE")->GetText());
+
+	if (type == "LATTICE_TDC") {
+	  m->AddUnpacker(address, new Unpacker_Lattice_TDC(type, address, hubAddress, channels, offset, resolution, measurementType, invertBytes, debugMode, correctionFile));
+	}
+	else {
+	  m->AddUnpacker(address, new UnpackingModule(type, address, hubAddress, channels, offset, resolution, measurementType, invertBytes, debugMode));
+	}
+	
+	node = node->ToElement()->NextSibling();
+      }      
+    }
     else  { // default type
 	m = new UnpackingModule(type, address, hubAddress, 0, 0, 0, "", invertBytes, debugMode);
 	cerr<<"  -- Creating UnpakingModule for unassigned type"<<endl;
@@ -275,13 +310,16 @@ void Unpacker2::DistributeEvents(string f) {
     
     // iterate through all the events in the file
     while(true) {
+      
+      if(debugMode == true)
+	cerr<<"Unpacker2.cc: Position in file at "<<file->tellg()<<endl;
     
       // read out the header of the event into hdr structure
       pHdr = (UInt_t*) &hdr;
       file->read((char *) (pHdr), getHdrSize());
       
       size_t eventSize = (size_t) getFullSize();
-      
+            
       if(debugMode == true)
 	cerr<<"Unpacker2.cc: Starting new event analysis, going over subevents"<<endl;
       
@@ -304,7 +342,14 @@ void Unpacker2::DistributeEvents(string f) {
 	if (u != NULL && (*pData) != 0) {
 	  if(debugMode == true)
 	    cerr<<"Unpacker2.cc: Processing event "<<analyzedEvents<<" on "<<getHubAddress()<<endl;
+	  GetUnpacker(getHubAddress())->SetEntireEventSize(getDataSize());
 	  GetUnpacker(getHubAddress())->ProcessEvent(pData, event);
+	  
+	  // gather decoded hits and fill them into event
+	
+	  GetUnpacker(getHubAddress())->GetTDCHits();
+	  GetUnpacker(getHubAddress())->GetADCHits();
+	
 	}
 	else if((*pData) == 0) {
 	  cerr<<"WARNING: First data word empty, skipping event nr "<<analyzedEvents<<endl;
@@ -313,13 +358,11 @@ void Unpacker2::DistributeEvents(string f) {
 	  cerr<<"ERROR: Unpacker not found for address: "<<getHubAddress()<<endl;
 	  exit(1);
 	}
-	
-	// gather decoded hits and fill the into event
-	GetUnpacker(getHubAddress())->GetTDCHits();
-	GetUnpacker(getHubAddress())->GetADCHits();
-	
+
 	if(debugMode == true)
 	  cerr<<"Unpacker2.cc: Ignoring "<<(getPaddedSize() - getDataSize())<<" bytes and reducing eventSize by "<<getDataSize(); 
+	
+	delete pData;
 	
 	// remove the padding bytes
 	file->ignore(getPaddedSize() - getDataSize());
@@ -333,13 +376,14 @@ void Unpacker2::DistributeEvents(string f) {
 	
 	eventSize -= getPaddedSize() - getDataSize();
 	
-	if(eventSize == 64 && fullSetup == true) { break; }
+	if((eventSize == 64) && fullSetup == true) { break; }
       }
       
       newTree->Fill();
       
-      if(analyzedEvents % 10000 == 0)
-	cerr<<analyzedEvents<<endl;
+      if(analyzedEvents % 10000 == 0) {
+				cerr<<analyzedEvents<<endl;
+      }
       
       analyzedEvents++;
       
@@ -349,9 +393,13 @@ void Unpacker2::DistributeEvents(string f) {
 	cerr<<"Unpacker2.cc: Ignoring padding of the event "<<(align8(eventSize) - eventSize)<<endl;
 	cerr<<"Unpacker2.cc: File pointer at "<<file->tellg()<<" of "<<fileSize<<" bytes"<<endl;
       }
-      file->ignore(align8(eventSize) - eventSize);
       
-      // check the end of loop conditions
+  //    if (fullSetup == false) {
+	file->ignore(align8(eventSize) - eventSize);
+//      }
+      
+      // check the end of loop conditions (end of file)
+      if(fileSize - file->tellg() < 200) { break; }
       if((file->eof() == true) || ((int)file->tellg() == fileSize)) { break; }
       if(analyzedEvents == eventsToAnalyze) { break; }
     }
@@ -379,14 +427,18 @@ size_t Unpacker2::getDataSize() {
 }
 
 std::string Unpacker2::getHubAddress() {
-  char buf[4];
+  string s = "0000";
+  stringstream sstream;
   if (invertBytes == false) {
-    sprintf(buf, "%04X", (UInt_t)((SubEventHdr*)subPHdr)->hubAddress);
+    sstream<<hex<<((SubEventHdr*)subPHdr)->hubAddress;  
   }
   else {
-    sprintf(buf, "%04X", ReverseHex((UInt_t)((SubEventHdr*)subPHdr)->hubAddress));
+    sstream<<hex<<ReverseHex((UInt_t)((SubEventHdr*)subPHdr)->hubAddress);  
   }
-  return string(buf);
+  
+  s = s.replace(4 - sstream.str().length(), sstream.str().length(), sstream.str());
+  
+  return s;
 }
 
 size_t Unpacker2::ReverseHex(size_t n) {

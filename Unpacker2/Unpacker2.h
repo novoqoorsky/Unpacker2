@@ -4,6 +4,7 @@
 #include <TTree.h>
 #include <TFile.h>
 #include <TObject.h>
+#include <TObjectTable.h>
 #include <string>
 #include "UnpackingModule.h"
 #include <map>

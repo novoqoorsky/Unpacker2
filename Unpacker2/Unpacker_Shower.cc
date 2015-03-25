@@ -19,7 +19,10 @@ void Unpacker_Shower::ProcessEvent(UInt_t* data, Event* evt) {
     iter->second->Clear();
   }
   
-  while(true) {
+  size_t dataSize = GetEntireEventSize();
+  
+  // iterate through all the 32b words of the current event
+  while(dataSize > 0) {
     
     UInt_t data_i = 0;
     if(GetInvertBytes() == true) {
@@ -28,26 +31,19 @@ void Unpacker_Shower::ProcessEvent(UInt_t* data, Event* evt) {
     else {
       data_i = (*data);
     }
-    
-    
-    UInt_t dataSize = data_i >> 16;
-    UInt_t addr = data_i & 0xffff;
-    
-    if (debugMode == true)
-      cerr<<"Unpacker_Shower.cc: Size of data: "<<dataSize<<" address: "<<addr<<endl;
-    
-    if (dataSize > 0) {
-      
+
+    UInt_t internalSize = data_i >> 16;
+    UInt_t addr = data_i & 0xffff;  
+
+    UnpackingModule* u = GetUnpacker(UIntToString(addr));
+    if (u != NULL) {
+      GetUnpacker(UIntToString(addr))->SetEntireEventSize(internalSize + 1);
       GetUnpacker(UIntToString(addr))->ProcessEvent(data, evt);
-      
-      data += dataSize;
-      
-      break;
     }
-    else {
-      data++;
-    }
-  } 
+
+    data += internalSize + 1;
+    dataSize -= (internalSize + 1) * 4;
+  }
 }
 
 void Unpacker_Shower::GetADCHits() {
@@ -61,10 +57,10 @@ void Unpacker_Shower::GetADCHits() {
 	  
 	ADCHit* hit = event->AddADCHit(iter->second->GetChannelOffset() + i);
 	
-	if(debugMode == true) {
-	  cerr<<"Unpacker_Shower.cc: Adding a hit on channel "<<(iter->second->GetChannelOffset() + i)<<endl;
-	  cerr<<"                    with values "<<((Unpacker_Ecal_ADC*)(iter->second))->GetDspSum(i)<<" "<<iter->second->GetDspMean(i)<<endl;
-	}
+// 	if(debugMode == true) {
+// 	  cerr<<"SHW: Adding a hit on channel "<<(iter->second->GetChannelOffset() + i);
+// 	  cerr<<"                    with values "<<((Unpacker_Ecal_ADC*)(iter->second))->GetDspSum(i)<<" "<<iter->second->GetDspMean(i)<<endl;
+// 	}
 	  
 	for(int j = 0; j < ((Unpacker_Ecal_ADC*)(iter->second))->GetNumberOfSamples(); j++) {
 	    hit->AddSample(((Unpacker_Ecal_ADC*)(iter->second))->GetSample(i, j));

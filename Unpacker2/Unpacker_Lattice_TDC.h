@@ -2,31 +2,56 @@
 #define Unpacker_Lattice_TDC_h
 
 #include "UnpackingModule.h"
+#include "Event.h"
+#include "Hit.h"
+#include <TH1F.h>
+#include <TFile.h>
 
 class Unpacker_Lattice_TDC : public UnpackingModule {
   
-private:  
-  UInt_t** leadTimes;
-  UInt_t** trailTimes;
-  UInt_t* leadMult;
-  UInt_t* trailMult;
+private:
+	int* leadMult;
+	int** leadFineTimes;
+	int** leadCoarseTimes;
+	int** leadEpochs;
   
+	int* trailMult;
+	int** trailFineTimes;
+	int** trailCoarseTimes;
+	int** trailEpochs;
+
   int channelNumber;
+  int offset;
+  
+  TH1F** corrections;
+  bool useCorrections;
+
+  int actualEpoch;
+  
+  UInt_t errorBits;
   
 public:
   
   Unpacker_Lattice_TDC() { }
-  Unpacker_Lattice_TDC(string bT, string bA, string hA, int cN, int o, int r, string mR, bool dec, bool dbg);
+  Unpacker_Lattice_TDC(string bT, string bA, string hA, int cN, int o, int r, string mR, bool dec, bool dbg, string cF);
   ~Unpacker_Lattice_TDC();
   
   void ProcessEvent(UInt_t* data);
+  void ProcessEvent(UInt_t* data, Event* evt);
   
-  void SayHi() { cerr<<"HTPDC_HR: Hi from HPTDC_HR"<<endl; }
+  void SayHi() { cerr<<"Lattice_TDC: Hi from Lattice_TDC"<<endl; }
   
-  UInt_t GetLeadTime(int channel, int mult) { return leadTimes[channel][mult]; }
-  UInt_t GetLeadMult(int channel) { return leadMult[channel]; }
-  UInt_t GetTrailTime(int channel, int mult) { return trailTimes[channel][mult]; }
-  UInt_t GetTrailMult(int channel) { return trailMult[channel]; }
+  int GetLeadMult(int channel) { return leadMult[channel]; }
+	int GetLeadFineTime(int channel, int mult) { return leadFineTimes[channel][mult]; }
+	int GetLeadCoarseTime(int channel, int mult) { return leadCoarseTimes[channel][mult]; }
+	int GetLeadEpoch(int channel, int mult) { return leadEpochs[channel][mult]; }
+
+  int GetTrailMult(int channel) { return trailMult[channel]; }
+	int GetTrailFineTime(int channel, int mult) { return trailFineTimes[channel][mult]; }
+  int GetTrailCoarseTime(int channel, int mult) { return trailCoarseTimes[channel][mult]; }
+  int GetTrailEpoch(int channel, int mult) { return trailEpochs[channel][mult]; }
+
+  UInt_t GetErrorBits() { return errorBits; }
   
   void Clear();
   

@@ -29,11 +29,11 @@ public:
   void GetADCHits();
   void GetTDCHits();
   
-  void SayHi() { cerr<<"Hi from Ecal_ADC"<<endl; }
+  void SayHi() { cerr<<"Ecal_ADC: Hi from Ecal_ADC"<<endl; }
   
   void Clear();
   
-  void AddSample(Int_t channel, Int_t sampleNr, Int_t sample) { samples[channel][sampleNr] = sample; }
+  void AddSample(Int_t channel, Int_t sampleNr, Int_t sample) { samples[channel][sampleNr] = sample;}
   void SetDspSum(Int_t channel, Int_t sum) { dspSums[channel] = sum; }
   void SetDspMean(Int_t channel, Int_t mean) { dspMeans[channel] = mean; }
   void SetDspCfA(Int_t channel, Int_t cfa) { dspCfA[channel] = cfa; }

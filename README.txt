@@ -15,6 +15,12 @@ Installation:
 - Download the tools2 directory
 - Adjust the path the Unpacker2 library in rootlogon.c
 
+Tools package description:
+	- generate_corrections_TRB3_dataStructureV2: macro used for generating TDC calibration parameters. Run as T->Process on an unpacked in RAW mode root tree with calibration triggers
+	- run_analysis: precompiled macro taht runs a sequence of tools required to achieve a root Tree with properly calculated hit times
+	- calculate_times: precompiled macro that creates timelines for all the hits on channels
+	- calculate_hits: precompiled macro that creates hit objects out of timeline times
+
 Usage:
 - prepare an XML file with setup description
 - from tools2 run root -l

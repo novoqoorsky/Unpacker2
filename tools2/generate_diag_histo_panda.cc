@@ -15,7 +15,7 @@
 #include <TStyle.h>
 
 
-#define CHANNELS_NUMBER 49
+#define CHANNELS_NUMBER 100
 
 TH1F* tot_hist[CHANNELS_NUMBER];
 TH1F* mult_hist[CHANNELS_NUMBER];

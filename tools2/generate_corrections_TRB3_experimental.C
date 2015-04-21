@@ -31,7 +31,7 @@
 TH1F** binsHist;
 TH1F** correctionsHist;
 
-int channelCount = 3600;
+int channelCount = 192;
 
 void generate_corrections_TRB3_experimental::Begin(TTree * /*tree*/)
 {
@@ -91,9 +91,9 @@ void generate_corrections_TRB3_experimental::SlaveTerminate()
   //filling linear corrections for reference channels
   for(int i = 0; i < 500; i++) {
     correctionsHist[0]->SetBinContent(i, i*10);
-    correctionsHist[65]->SetBinContent(i, i*10);
-    correctionsHist[130]->SetBinContent(i, i*10);
-    correctionsHist[195]->SetBinContent(i, i*10);
+    correctionsHist[48]->SetBinContent(i, i*10);
+    correctionsHist[95]->SetBinContent(i, i*10);
+    correctionsHist[143]->SetBinContent(i, i*10);
   }
 }
 

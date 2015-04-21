@@ -40,16 +40,20 @@ int calculate_hits(int eventsNum, const char* fileName, int referenceChannel)
   Int_t entries = (Int_t)chain.GetEntries();
   cout<<"Entries = " <<entries<<endl;
 
+  double refTime = -100000;
+  double actualLead = -100000;
+  bool firstLeadFound = false;
+
   for(Int_t i = 0; i < entries; i++)
 	{
-    if (i % 10000 == 0) cout<<i<<endl;
+    if (i % 10000 == 0) cerr<<i<<" of "<<entries<<"\r";
     if (i == eventsNum) break;
     chain.GetEntry(i);
     pArray = pEvent->GetTDCHitsArray();
     if (pArray == 0) continue;
     TIter iter(pArray);
 
-		double refTime = -100000;
+   refTime = -100000;
 
     while( pHit = (TDCHitExtended*) iter.Next() )
 		{
@@ -60,8 +64,8 @@ int calculate_hits(int eventsNum, const char* fileName, int referenceChannel)
 			}
 
 			// hit construction logic
-			double actualLead = -100000;
-			bool firstLeadFound = false;
+			actualLead = -100000;
+			firstLeadFound = false;
 //			cerr<<"Analysing channel "<<pHit->GetChannel()<<" with "<<pHit->GetTimeLineSize()<<" hits inside"<<endl;
 
 			for (int j = 0; j < pHit->GetTimeLineSize(); j++) {

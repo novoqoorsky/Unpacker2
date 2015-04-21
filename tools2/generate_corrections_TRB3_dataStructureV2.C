@@ -1,5 +1,5 @@
 #define generate_corrections_TRB3_dataStructureV2_cxx
-// The class definition in generate_corrections_TRB3_experimental_experimental.h has been generated automatically
+// The class definition in generate_corrections_TRB3_dataStructureV2_experimental.h has been generated automatically
 // by the ROOT utility TTree::MakeSelector(). This class is derived
 // from the ROOT class TSelector. For more information on the TSelector
 // framework see $ROOTSYS/README/README.SELECTOR or the ROOT User Manual.
@@ -18,9 +18,9 @@
 //
 // To use this file, try the following session on your Tree T:
 //
-// Root > T->Process("generate_corrections_TRB3_experimental_experimental.C")
-// Root > T->Process("generate_corrections_TRB3_experimental_experimental.C","some options")
-// Root > T->Process("generate_corrections_TRB3_experimental_experimental.C+")
+// Root > T->Process("generate_corrections_TRB3_dataStructureV2_experimental.C")
+// Root > T->Process("generate_corrections_TRB3_dataStructureV2_experimental.C","some options")
+// Root > T->Process("generate_corrections_TRB3_dataStructureV2_experimental.C+")
 //
 
 #include "generate_corrections_TRB3_dataStructureV2.h"
@@ -31,7 +31,7 @@
 TH1F** binsHist;
 TH1F** correctionsHist;
 
-int channelCount = 200;
+int channelCount = 196;
 
 void generate_corrections_TRB3_dataStructureV2::Begin(TTree * /*tree*/)
 {
@@ -91,9 +91,9 @@ void generate_corrections_TRB3_dataStructureV2::SlaveTerminate()
   //filling linear corrections for reference channels
   for(int i = 0; i < 500; i++) {
     correctionsHist[0]->SetBinContent(i, i*10);
-    correctionsHist[48]->SetBinContent(i, i*10);
-    correctionsHist[95]->SetBinContent(i, i*10);
-    correctionsHist[143]->SetBinContent(i, i*10);
+    correctionsHist[49]->SetBinContent(i, i*10);
+    correctionsHist[98]->SetBinContent(i, i*10);
+    correctionsHist[147]->SetBinContent(i, i*10);
   }
 }
 

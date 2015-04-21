@@ -10,85 +10,127 @@
 #include <TChain.h>
 #include <TCanvas.h>
 
+#define REF_CHANNELS_NUMBER 4
 
-#define CHANNELS_NUMBER 32
-
-int calculate_times(int eventsNum, const char* fileName)
+int calculate_times(int eventsNum, const char* fileName, int refChannelOffset)
 {
-  TChain chain("T");
-  chain.Add(fileName);
+
+ //int localTrailIndex = 0;
+ double lastTime = -1;
+ int localIndex = 0;
+
+ TChain chain("T");
+ chain.Add(fileName);
     
-  Event* pEvent = 0;
-  TDCHit* pHit = 0;
-  TClonesArray* pArray = 0;
-  chain.SetBranchAddress("event", &pEvent);
+ Event* pEvent = 0;
+ TDCHit* pHit = 0;
+ TClonesArray* pArray = 0;
+ chain.SetBranchAddress("event", &pEvent);
 
-	string newFileName(fileName);
-	newFileName = newFileName.substr(0, newFileName.size() - 5);
-	newFileName += "_times.root";
+ string newFileName(fileName);
+ newFileName = newFileName.substr(0, newFileName.size() - 5);
+ newFileName += "_times.root";
 
-	TFile* new_file = new TFile(newFileName.c_str(), "RECREATE");
-	TTree* new_tree = new TTree("T", "Normalized times tree");
-	Event* new_event = 0;
-	Int_t split = 2;
-	Int_t bsize = 64000;
-	new_tree->Branch("event", "Event", &new_event, bsize, split);
+ TFile* new_file = new TFile(newFileName.c_str(), "RECREATE");
+ TTree* new_tree = new TTree("T", "Normalized times tree");
+ Event* new_event = 0;
+ Int_t split = 2;
+ Int_t bsize = 64000;
+ new_tree->Branch("event", "Event", &new_event, bsize, split);
   
-  Int_t entries = (Int_t)chain.GetEntries();
-  cout<<"Entries = " <<entries<<endl;
+ Int_t entries = (Int_t)chain.GetEntries();
+ cout<<"Entries = " <<entries<<endl;
 
-  for(Int_t i = 0; i < entries; i++)
+
+ int refTimeEpoch[REF_CHANNELS_NUMBER];
+ int refTimeCoarse[REF_CHANNELS_NUMBER];
+ int refTimeFine[REF_CHANNELS_NUMBER];
+
+ for(Int_t i = 0; i < entries; i++)
 	{
-    if (i % 10000 == 0) cout<<i<<endl;
+    if (i % 10000 == 0) cerr<<i<<" of "<<entries<<"\r";
     if (i == eventsNum) break;
     chain.GetEntry(i);
     pArray = pEvent->GetTDCHitsArray();
     if (pArray == 0) continue;
     TIter iter(pArray);
 
-		int refTimeEpoch = 0;
-		int refTimeCoarse = 0;
-		int refTimeFine = 0;
+		for(int l = 0; l < REF_CHANNELS_NUMBER; l++) {
+			refTimeEpoch[l] = -222222;
+			refTimeCoarse[l] = -222222;
+			refTimeFine[l] = -222222;			
+		}
 
+	
+		// fetch the reference times
+		while( pHit = (TDCHit*) iter.Next()) {
+			if (pHit->GetChannel() % refChannelOffset == 0)
+				{
+					refTimeEpoch[pHit->GetChannel() / refChannelOffset] = pHit->GetLeadEpoch(0);
+					refTimeCoarse[pHit->GetChannel() / refChannelOffset] = pHit->GetLeadCoarse(0);
+					refTimeFine[pHit->GetChannel() / refChannelOffset] = pHit->GetLeadFine(0);
+
+					double leadTime = (double) (
+						(						
+							( (((unsigned)pHit->GetLeadEpoch(0)) << 11) * 5.0)
+						)
+					);
+					leadTime += ( ( (pHit->GetLeadCoarse(0) * 5000.) - (pHit->GetLeadFine(0)) ) / 1000.);
+
+					TDCHitExtended* new_hit = new_event->AddTDCHitExtended(pHit->GetChannel());
+					new_hit->SetAbsoluteTimeLine(leadTime, 0);
+					new_hit->SetRisingEdge(true, 0);
+					new_hit->SetAbsoluteTimeLine(leadTime + 10, 1);
+					new_hit->SetRisingEdge(false, 1);
+					new_hit->SetTimeLineSize(2);
+				}
+		}
+
+		// create time lines for normal channels
+		iter = iter.Begin();
     while( pHit = (TDCHit*) iter.Next() )
 		{
-			
-			if ( (pHit->GetLeadsNum() > 0 && pHit->GetTrailsNum() > 0) || pHit->GetChannel() == 0 )
+			if ( (pHit->GetLeadsNum() > 0 && pHit->GetTrailsNum() > 0) && ((pHit->GetChannel() % refChannelOffset) != 0) )
 			{
 				TDCHitExtended* new_hit = new_event->AddTDCHitExtended(pHit->GetChannel());
-				int localTrailIndex = 0;
-				double lastTime = -1;
-				int localIndex = 0;
+				//localTrailIndex = 0;
+				lastTime = -1;
+				localIndex = 0;
 
-				if (pHit->GetChannel() == 0)
-				{
-					refTimeEpoch = pHit->GetLeadEpoch(0);
-					refTimeCoarse = pHit->GetLeadCoarse(0);
-					refTimeFine = pHit->GetLeadFine(0);
-				}
-	
+				int tdc_number = pHit->GetChannel() / refChannelOffset;
+
 				for (int j = 0; j < pHit->GetLeadsNum(); j++) 
 				{
 					double leadTime = (double) (
 						(						
 							( (((unsigned)pHit->GetLeadEpoch(j)) << 11) * 5.0) -
-							( (((unsigned)refTimeEpoch) << 11) * 5.0 )
+							( (((unsigned)refTimeEpoch[tdc_number]) << 11) * 5.0 )
 						)
 					);
-					leadTime += ((((pHit->GetLeadCoarse(j) - refTimeCoarse) * 5000.) - (pHit->GetLeadFine(j) - refTimeFine)) / 1000.);
-					//cerr<<"Adding RISE on channel "<<pHit->GetChannel()<<" with epoch "<<pHit->GetLeadEpoch(j)<<" coarse "<<pHit->GetLeadCoarse(j)<<" fine "<<pHit->GetLeadFine(j);
-					//printf(" absolute %f\n", leadTime);
-					for(int l = 0; l <= localIndex; l++)
-					{
-						if (leadTime < new_hit->GetAbsoluteTimeLine(l) ) { // || new_hit->GetAbsoluteTimeLine(l) == -100000) {
-							new_hit->ShiftEverythingUpByOne(l - 1);
-	//						new_hit->SetShortTimeLine(leadTime, l);	
-							new_hit->SetAbsoluteTimeLine(leadTime, l);
-							new_hit->SetRisingEdge(true, l);
-							localIndex++;
-							new_hit->SetTimeLineSize(localIndex);
-							break;
+					leadTime += ((((pHit->GetLeadCoarse(j) - refTimeCoarse[tdc_number]) * 5000.) - (pHit->GetLeadFine(j) - refTimeFine[tdc_number])) / 1000.);
+
+					//if (pHit->GetChannel() == 100)
+						//	printf("%f, %d, %d, %d \n", leadTime, pHit->GetLeadEpoch(j), pHit->GetLeadCoarse(j), pHit->GetLeadFine(j));
+						//printf("%f, %d, %d, %d \n", leadTime, tdc_number, refTimeEpoch[tdc_number], refTimeCoarse[tdc_number], refTimeFine[tdc_number]);
+
+					if (localIndex > 0) {
+						for(int l = 0; l <= localIndex; l++)
+						{
+							if (leadTime < new_hit->GetAbsoluteTimeLine(l) || l == localIndex) {
+								new_hit->ShiftEverythingUpByOne(l - 1);
+								new_hit->SetAbsoluteTimeLine(leadTime, l);
+								new_hit->SetRisingEdge(true, l);
+								localIndex++;
+								new_hit->SetTimeLineSize(localIndex);
+								break;
+							}
 						}
+					}
+					else {
+						new_hit->SetAbsoluteTimeLine(leadTime, 0);
+						new_hit->SetRisingEdge(true, 0);
+						localIndex++;
+						new_hit->SetTimeLineSize(localIndex);
 					}
 				}
 				for (int k = 0; k < pHit->GetTrailsNum(); k++)
@@ -96,27 +138,32 @@ int calculate_times(int eventsNum, const char* fileName)
 					double trailTime = (double) (
 						(						
 							( (((unsigned)pHit->GetTrailEpoch(k)) << 11) * 5.0) -
-							( (((unsigned)refTimeEpoch) << 11) * 5.0 )
+							( (((unsigned)refTimeEpoch[tdc_number]) << 11) * 5.0 )
 						)
 					);
-					trailTime += ( (((pHit->GetTrailCoarse(k) - refTimeCoarse) * 5000.) - (pHit->GetTrailFine(k) - refTimeFine)) / 1000.);
-					//cerr<<"Adding FALL on channel "<<pHit->GetChannel()<<" with epoch "<<pHit->GetTrailEpoch(k)<<" coarse "<<pHit->GetTrailCoarse(k)<<" fine "<<pHit->GetTrailFine(k);
-					//printf(" absolute %f\n", trailTime);
-					for(int l = 0; l <= localIndex; l++)
-					{
-						if (trailTime < new_hit->GetAbsoluteTimeLine(l) ) { // || new_hit->GetAbsoluteTimeLine(l) == -100000) {
-							new_hit->ShiftEverythingUpByOne(l - 1);
-//							new_hit->SetShortTimeLine(trailTime, l);
-							new_hit->SetAbsoluteTimeLine(trailTime, l);
-							new_hit->SetRisingEdge(false, l);
-							localIndex++;
-							new_hit->SetTimeLineSize(localIndex);
-							break;
+					trailTime += ( (((pHit->GetTrailCoarse(k) - refTimeCoarse[tdc_number]) * 5000.) - (pHit->GetTrailFine(k) - refTimeFine[tdc_number])) / 1000.);
+
+					if (localIndex > 0) {
+						for(int l = 0; l <= localIndex; l++)
+						{
+							if (trailTime < new_hit->GetAbsoluteTimeLine(l) || l == localIndex ) {
+								new_hit->ShiftEverythingUpByOne(l - 1);
+								new_hit->SetAbsoluteTimeLine(trailTime, l);
+								new_hit->SetRisingEdge(false, l);
+								localIndex++;
+								new_hit->SetTimeLineSize(localIndex);
+								break;
+							}
 						}
+					}
+					else {
+						new_hit->SetAbsoluteTimeLine(trailTime, 0);
+						new_hit->SetRisingEdge(false, 0);
+						localIndex++;
+						new_hit->SetTimeLineSize(localIndex);
 					}
 				}
 				new_hit->SetTimeLineSize(localIndex);
-//				new_hit->PrintOut();
 			}
 		}
 

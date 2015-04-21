@@ -15,13 +15,13 @@
 
 // Header file for the classes stored in the TTree if any.
 #include "../Unpacker2/Event.h"
-#include "/usr/include/root/TObject.h"
+#include "/home/guplab/root/include/TObject.h"
 #include "../Unpacker2/TDCHit.h"
 #include "../Unpacker2/TDCHitExtended.h"
 #include "../Unpacker2/ADCHit.h"
 
 // Fixed size dimensions of array or collections stored in the TTree if any.
-   const Int_t kMaxTDCHits = 1000;
+   const Int_t kMaxTDCHits = 196;
    const Int_t kMaxADCHits = 1;
 
 class generate_corrections_TRB3_dataStructureV2 : public TSelector {

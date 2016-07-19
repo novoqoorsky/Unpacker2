@@ -5,8 +5,8 @@ using namespace std;
 
 ClassImp(EventIII);
 
-EventIII::EventIII() {   
-  TDCChannels = new TClonesArray("TDCChannel", 1000);
+EventIII::EventIII() : TNamed("EventIII", "EventIII") {   
+  TDCChannels = new TClonesArray("TDCChannel", 2100);
   
   TDCChannels->Delete();
   

@@ -3,7 +3,7 @@
 
 #include "TDCHit.h"
 
-#define MAX_HITS 100
+#define MAX_HITS 50
 
 class TDCHitExtended : public TDCHit {
   

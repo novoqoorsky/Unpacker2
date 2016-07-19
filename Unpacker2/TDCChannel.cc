@@ -42,3 +42,21 @@ void TDCChannel::AddHit(double lead, double trail, double ref) {
 		//printf("Adding a hit on channel %d with lead %f and trail %f and tot %f\n", channel, lead, trail, trail - lead);
 	}
 }
+
+void TDCChannel::AddHit(double lead, double trail) {
+	if (hitsNum < MAX_FULL_HITS - 1) {
+		if (hitsNum == 0) {
+			leadTime1 = lead;
+			trailTime1 = trail;
+			tot1 = trail - lead;
+		}
+
+		leadTimes[hitsNum] = lead;
+		trailTimes[hitsNum] = trail;
+		tots[hitsNum] = trail - lead;
+
+		hitsNum++;
+
+		//printf("Adding a hit on channel %d with lead %f and trail %f and tot %f\n", channel, lead, trail, trail - lead);
+	}
+}

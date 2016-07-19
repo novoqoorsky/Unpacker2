@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -10,12 +9,12 @@
 #include "ADCHit.h"
 #include "TDCHit.h"
 #include "UnpackingModule.h"
-#include "Unpacker_HPTDC_VHR.h"
-#include "Unpacker_HPTDC_HR.h"
-#include "Unpacker_HUB2.h"
-#include "Unpacker_TRB2.h"
-#include "Unpacker_Shower.h"
-#include "Unpacker_Ecal_ADC.h"
+//#include "Unpacker_HPTDC_VHR.h"
+//#include "Unpacker_HPTDC_HR.h"
+//#include "Unpacker_HUB2.h"
+//#include "Unpacker_TRB2.h"
+//#include "Unpacker_Shower.h"
+//#include "Unpacker_Ecal_ADC.h"
 #include "Unpacker_TRB3.h"
 #include "Unpacker_Lattice_TDC.h"
 
@@ -114,7 +113,7 @@ void Unpacker2::ParseConfigFile(string f, string s) {
     correctionFile = string(element->FirstChildElement("CORRECTION_FILE")->GetText());
     
     // create appropriate unpacking module
-    if (type == "TRB2_S") { // standalone type
+/*    if (type == "TRB2_S") { // standalone type
 	fullSetup = false;
       
 	m = new Unpacker_TRB2(type, address, hubAddress, 0, 0, 0, "", invertBytes, debugMode);
@@ -234,10 +233,9 @@ void Unpacker2::ParseConfigFile(string f, string s) {
 	      
 	internalNode = internalNode->ToElement()->NextSibling();
       }
-    }
-    else if (type == "TRB3_S") {
-      fullSetup = false;
-      //fullSetup = true;
+    }*/
+    //else if (type == "TRB3_S") {
+    if (type == "TRB3_S") {
 
       m = new Unpacker_TRB3(type, address, hubAddress, 0, 0, 0, "", invertBytes, debugMode);
       m->SetReferenceChannel(referenceChannel);
@@ -307,21 +305,27 @@ void Unpacker2::DistributeEvents(string f) {
     cerr<<"Starting event loop"<<endl;
     
     event = new Event();
+
+    size_t eventSize = 0;
     
     // iterate through all the events in the file
     while(true) {
       
       if(debugMode == true)
-	cerr<<"Unpacker2.cc: Position in file at "<<file->tellg()<<endl;
+	cerr<<"Unpacker2.cc: Position in file at "<<file->tellg();
     
       // read out the header of the event into hdr structure
       pHdr = (UInt_t*) &hdr;
       file->read((char *) (pHdr), getHdrSize());
       
-      size_t eventSize = (size_t) getFullSize();
+      eventSize = (size_t) getFullSize();
             
       if(debugMode == true)
-	cerr<<"Unpacker2.cc: Starting new event analysis, going over subevents"<<endl;
+	cerr<<" current event size "<<eventSize<<endl<<"Unpacker2.cc: Starting new event analysis, going over subevents"<<endl;
+
+
+      if (eventSize == 32)
+	continue;
       
       while(true) {
 	subPHdr = (UInt_t*) &subHdr;
@@ -348,7 +352,7 @@ void Unpacker2::DistributeEvents(string f) {
 	  // gather decoded hits and fill them into event
 	
 	  GetUnpacker(getHubAddress())->GetTDCHits();
-	  GetUnpacker(getHubAddress())->GetADCHits();
+//	  GetUnpacker(getHubAddress())->GetADCHits();
 	
 	}
 	else if((*pData) == 0) {
@@ -372,11 +376,15 @@ void Unpacker2::DistributeEvents(string f) {
 	if(debugMode == true)
 	  cerr<<" leaving eventSize of "<<eventSize<<endl;
 	
-	if(eventSize == 48 && fullSetup == false) { break; }
+	if(eventSize <= 48 && fullSetup == false) { break; }
 	
 	eventSize -= getPaddedSize() - getDataSize();
 	
-	if((eventSize == 64) && fullSetup == true) { break; }
+	if((eventSize <= 64) && fullSetup == true) { break; }
+
+	if((eventSize <= 176) && fullSetup == true) { break; }
+
+	//if((eventSize <= 250) && fullSetup == true) { break; }
       }
       
       newTree->Fill();
@@ -394,12 +402,11 @@ void Unpacker2::DistributeEvents(string f) {
 	cerr<<"Unpacker2.cc: File pointer at "<<file->tellg()<<" of "<<fileSize<<" bytes"<<endl;
       }
       
-  //    if (fullSetup == false) {
+      if (fullSetup == false) {
 	file->ignore(align8(eventSize) - eventSize);
-//      }
-      
+      }
       // check the end of loop conditions (end of file)
-      if(fileSize - file->tellg() < 200) { break; }
+      if((fileSize - ((int)file->tellg())) < 500) { break; }
       if((file->eof() == true) || ((int)file->tellg() == fileSize)) { break; }
       if(analyzedEvents == eventsToAnalyze) { break; }
     }
@@ -435,8 +442,9 @@ std::string Unpacker2::getHubAddress() {
   else {
     sstream<<hex<<ReverseHex((UInt_t)((SubEventHdr*)subPHdr)->hubAddress);  
   }
-  
+  //cerr<<s<<" |"<<sstream<<"| |";
   s = s.replace(4 - sstream.str().length(), sstream.str().length(), sstream.str());
+  //cerr<<s<<"|"<<endl;
   
   return s;
 }

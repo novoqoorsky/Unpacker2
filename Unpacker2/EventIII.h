@@ -11,7 +11,7 @@
 
 class TDCChannel;
 
-class EventIII : public TObject {
+class EventIII : public TNamed {
   
 private:
   Int_t totalNTDCChannels;

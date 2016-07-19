@@ -3,46 +3,47 @@
 
 #include <fstream>
 #include <TObject.h>
+#include <TNamed.h>
 #include <TClonesArray.h>
 #include "TDCHit.h"
-#include "ADCHit.h"
+//#include "ADCHit.h"
 #include "TDCHitExtended.h"
 #include <iostream>
 
 using namespace std;
 
 class TDCHit;
-class ADCHit;
+//class ADCHit;
 
-class Event : public TObject {
+class Event : public TNamed {
   
 private:
   Int_t totalNTDCHits;
-  Int_t totalNADCHits;
+ // Int_t totalNADCHits;
   float TDCReferenceTime;
   UInt_t errorBits;
   
 public:
   TClonesArray* TDCHits;
-  TClonesArray* ADCHits;
+//  TClonesArray* ADCHits;
   
   Event();
   virtual ~Event() { Clear(); }
   
   TDCHit* AddTDCHit(int channel);
-	TDCHitExtended* AddTDCHitExtended(int channel);
-  ADCHit* AddADCHit(int channel);
+  TDCHitExtended* AddTDCHitExtended(int channel);
+  //ADCHit* AddADCHit(int channel);
   
   void SetTDCReferenceTime(float t) { TDCReferenceTime = t; }
   void SetErrorBits(UInt_t err) { errorBits = err; }
   
-  Int_t GetTotalNADCHits() { return totalNADCHits; }
+ // Int_t GetTotalNADCHits() { return totalNADCHits; }
   Int_t GetTotalNTDCHits() { return totalNTDCHits; }
   float GetTDCReferenceTime() { return TDCReferenceTime; }
   UInt_t GetErrorBits() { return errorBits; }
   
   TClonesArray* GetTDCHitsArray() {return TDCHits;}
-  TClonesArray* GetADCHitsArray() {return ADCHits;}
+  //TClonesArray* GetADCHitsArray() {return ADCHits;}
   
   void Clear(void);
   

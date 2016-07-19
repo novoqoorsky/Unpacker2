@@ -24,7 +24,7 @@ private:
   
   bool debugMode;
   
-  int fileSize;
+  long int fileSize;
 
 public:
   

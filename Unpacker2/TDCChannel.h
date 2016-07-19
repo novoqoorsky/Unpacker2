@@ -6,7 +6,7 @@
 #include <TClonesArray.h>
 #include <iostream>
 
-#define MAX_FULL_HITS 100
+#define MAX_FULL_HITS 50
 
 class TDCChannel : public TObject {
 
@@ -36,6 +36,7 @@ public:
 	int GetHitsNum() { return hitsNum; }
 
 	void AddHit(double lead, double trail, double ref);
+	void AddHit(double lead, double trail);
 	double GetLeadTime1() { return leadTime1; }
 	double GetLeadTime(int mult) { return leadTimes[mult]; }
 	double GetTOT1() { return tot1; }

@@ -1,20 +1,13 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include "./tinyxml2-master/tinyxml2.h"
+#include <tinyxml2.h>
 #include <map>
 #include <cstdio>
 #include "Unpacker2.h"
 #include "Event.h"
-#include "ADCHit.h"
 #include "TDCHit.h"
 #include "UnpackingModule.h"
-//#include "Unpacker_HPTDC_VHR.h"
-//#include "Unpacker_HPTDC_HR.h"
-//#include "Unpacker_HUB2.h"
-//#include "Unpacker_TRB2.h"
-//#include "Unpacker_Shower.h"
-//#include "Unpacker_Ecal_ADC.h"
 #include "Unpacker_TRB3.h"
 #include "Unpacker_Lattice_TDC.h"
 
@@ -112,129 +105,8 @@ void Unpacker2::ParseConfigFile(string f, string s) {
     referenceChannel = atoi(element->FirstChildElement("REFERENCE_CHANNEL")->GetText());
     correctionFile = string(element->FirstChildElement("CORRECTION_FILE")->GetText());
     
-    // create appropriate unpacking module
-/*    if (type == "TRB2_S") { // standalone type
-	fullSetup = false;
-      
-	m = new Unpacker_TRB2(type, address, hubAddress, 0, 0, 0, "", invertBytes, debugMode);
-	m->SetReferenceChannel(referenceChannel);
-	
-	// create additional unpackers for internal modules 
-	node = element->FirstChildElement("MODULES")->FirstChildElement("MODULE");
-	while(true) {
-	  
-	  if (node == 0)
-	    break;
-	  
-	  type = string(node->ToElement()->FirstChildElement("TYPE")->GetText());
-	  address = string(node->ToElement()->FirstChildElement("TRBNET_ADDRESS")->GetText());
-	  channels = atoi(node->ToElement()->FirstChildElement("NUMBER_OF_CHANNELS")->GetText());
-	  offset = atoi(node->ToElement()->FirstChildElement("CHANNEL_OFFSET")->GetText());
-	  resolution = atoi(node->ToElement()->FirstChildElement("RESOLUTION")->GetText());
-	  measurementType = string(node->ToElement()->FirstChildElement("MEASUREMENT_TYPE")->GetText());
-	  
-	  if (type == "HPTDC_HR") {
-	    m->AddUnpacker(address, new Unpacker_HPTDC_HR(type, address, hubAddress, channels, offset, resolution, measurementType, invertBytes, debugMode));
-	  }
-	  else if (type == "HPTDC_VHR") {
-	    Unpacker_HPTDC_VHR* u = new Unpacker_HPTDC_VHR(type, address, hubAddress, channels, offset, resolution, measurementType, invertBytes, debugMode);
-	    u->SetInlCorrection(node->ToElement()->FirstChildElement("INL_FILE")->GetText());
-	    m->AddUnpacker(address, u);
-	  }
-	  else {
-	    m->AddUnpacker(address, new UnpackingModule(type, address, hubAddress, channels, offset, resolution, measurementType, invertBytes, debugMode));
-	  }
-	  
-	  node = node->ToElement()->NextSibling();
-	  
-	}
-	
-    }
-    else if (type == "HUB2") {
-	m = new Unpacker_HUB2(type, address, hubAddress, 0, 0, 0, "", invertBytes, debugMode);
-	
-	node = element->FirstChildElement("MODULES")->FirstChildElement("MODULE");
-	
-	while(true) {
-	  if (node == 0)
-	    break;
-	  
-	  type = string(node->ToElement()->FirstChildElement("TYPE")->GetText());
-	  address = string(node->ToElement()->FirstChildElement("TRBNET_ADDRESS")->GetText());
-	  
-	  UnpackingModule* t;
-	  string tAddr;
-	  
-	  if (type == "TRB2") {
-	    
-	    t = new Unpacker_TRB2(type, address, address, 0, 0, 0, "", invertBytes, debugMode);
-	    
-	    tAddr = address;
-	    
-	    tinyxml2::XMLNode* internalNode = node->ToElement()->FirstChildElement("MODULES")->FirstChildElement("MODULE");
-	    
-	    while(true) {
-	      
-	      if (internalNode == 0)
-		break;
 
-	      type = string(internalNode->ToElement()->FirstChildElement("TYPE")->GetText());
-	      address = string(internalNode->ToElement()->FirstChildElement("TRBNET_ADDRESS")->GetText());
-	      channels = atoi(internalNode->ToElement()->FirstChildElement("NUMBER_OF_CHANNELS")->GetText());
-	      offset = atoi(internalNode->ToElement()->FirstChildElement("CHANNEL_OFFSET")->GetText());
-	      resolution = atoi(internalNode->ToElement()->FirstChildElement("RESOLUTION")->GetText());
-	      measurementType = string(internalNode->ToElement()->FirstChildElement("MEASUREMENT_TYPE")->GetText());
-	      
-	      if (type == "HPTDC_HR") {
-		t->AddUnpacker(address, new Unpacker_HPTDC_HR(type, address, hubAddress, channels, offset, resolution, measurementType, invertBytes, debugMode));
-	      }
-	      else if (type == "HPTDC_VHR") {
-		Unpacker_HPTDC_VHR* u = new Unpacker_HPTDC_VHR(type, address, hubAddress, channels, offset, resolution, measurementType, invertBytes, debugMode);
-		u->SetInlCorrection(internalNode->ToElement()->FirstChildElement("INL_FILE")->GetText());
-		t->AddUnpacker(address, u);
-	      }
-	      else {
-		t->AddUnpacker(address, new UnpackingModule(type, address, hubAddress, channels, offset, resolution, measurementType, invertBytes, debugMode));
-	      }
-	      
-	      internalNode = internalNode->ToElement()->NextSibling();
-	    }
-	  }
-	  
-	  m->AddUnpacker(tAddr, t);
-	    
-	  node = node->ToElement()->NextSibling();
-	}
-    }
-    else if (type == "SHOWER") {
-      m = new Unpacker_Shower(type, address, address, 0, 0, 0, "", invertBytes, debugMode);
-      m->debugMode = debugMode;
-	    
-      tinyxml2::XMLNode* internalNode = node->ToElement()->FirstChildElement("MODULES")->FirstChildElement("MODULE");
-	    
-      while(true) {
-	      
-	if (internalNode == 0)
-	  break;
 
-	type = string(internalNode->ToElement()->FirstChildElement("TYPE")->GetText());
-	address = string(internalNode->ToElement()->FirstChildElement("TRBNET_ADDRESS")->GetText());
-	channels = atoi(internalNode->ToElement()->FirstChildElement("NUMBER_OF_CHANNELS")->GetText());
-	offset = atoi(internalNode->ToElement()->FirstChildElement("CHANNEL_OFFSET")->GetText());
-	resolution = atoi(internalNode->ToElement()->FirstChildElement("RESOLUTION")->GetText());
-	measurementType = string(internalNode->ToElement()->FirstChildElement("MEASUREMENT_TYPE")->GetText());
-	      
-	if (type == "ECAL_ADC") {
-	  m->AddUnpacker(address, new Unpacker_Ecal_ADC(type, address, hubAddress, channels, offset, resolution, measurementType, invertBytes, debugMode));
-	}
-	else {
-	  m->AddUnpacker(address, new UnpackingModule(type, address, hubAddress, channels, offset, resolution, measurementType, invertBytes, debugMode));
-	}
-	      
-	internalNode = internalNode->ToElement()->NextSibling();
-      }
-    }*/
-    //else if (type == "TRB3_S") {
     if (type == "TRB3_S") {
 
       m = new Unpacker_TRB3(type, address, hubAddress, 0, 0, 0, "", invertBytes, debugMode);

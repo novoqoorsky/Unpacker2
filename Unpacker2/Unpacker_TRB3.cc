@@ -3,8 +3,6 @@
 
 using namespace std;
 
-ClassImp(Unpacker_TRB3);
-
 Unpacker_TRB3::Unpacker_TRB3(string bT, string bA, string hA, int cN, int o, int r, string mR, bool dec, bool dbg) : UnpackingModule(bT, bA, hA, cN, o, r, mR, dec, dbg) {
   cerr<<"TRB3: Creating Unpacker_TRB3 for board type: "<<bT<<" board address "<<bA<<" hub address "<<hA<<endl;
 }

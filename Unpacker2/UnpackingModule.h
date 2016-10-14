@@ -103,8 +103,6 @@ public:
   
   bool debugMode;
   
-  ClassDef(UnpackingModule,1);
-  
 };
 
 

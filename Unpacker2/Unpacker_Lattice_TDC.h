@@ -55,8 +55,6 @@ public:
   
   void Clear();
   
-  ClassDef(Unpacker_Lattice_TDC, 1);
-  
 };
 
 #endif

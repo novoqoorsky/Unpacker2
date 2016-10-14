@@ -70,8 +70,6 @@ public:
   
   size_t ReverseHex(size_t n);
     
-  ClassDef(Unpacker2,1);
-  
 };
 
 

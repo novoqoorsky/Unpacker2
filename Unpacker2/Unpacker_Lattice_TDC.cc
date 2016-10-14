@@ -3,8 +3,6 @@
 
 using namespace std;
 
-ClassImp(Unpacker_Lattice_TDC);
-
 Unpacker_Lattice_TDC::Unpacker_Lattice_TDC(string bT, string bA, string hA, int cN, int o, int r, string mR, bool dec, bool dbg, string cF) : UnpackingModule(bT, bA, hA, cN, o, r, mR, dec, dbg) {
   
   channelNumber = cN;

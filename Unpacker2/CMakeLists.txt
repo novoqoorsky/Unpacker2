@@ -17,8 +17,6 @@ list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS}/etc/cmake)
 # find ROOT
 find_package(ROOT 5 REQUIRED)
 
-message("root use file: "  ${ROOT_USE_FILE})
-
 if(ROOT_USE_FILE)
   include(${ROOT_USE_FILE})
 endif()
@@ -44,12 +42,9 @@ set(DICTIONARY_REQUIRED
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 foreach(header ${DICTIONARY_REQUIRED})
-  message(${header})
   ROOT_GENERATE_DICTIONARY(${header}_Dict ${header} OPTIONS -p)
   list(APPEND SOURCES ${header}_Dict.cxx)
 endforeach()
-
-message("sources: " ${SOURCES})
 
 add_library(Unpacker2 SHARED ${SOURCES} ${HEADERS})
 

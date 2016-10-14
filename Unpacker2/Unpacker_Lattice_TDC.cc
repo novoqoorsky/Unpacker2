@@ -39,7 +39,7 @@ Unpacker_Lattice_TDC::Unpacker_Lattice_TDC(string bT, string bA, string hA, int 
   ifstream my_file(cF.c_str());
   
   if (cF == "raw") {
-    cerr<<"Lattice_TDC: WARNING: No corrections applied"<<endl;
+    if(debugMode == true) cerr<<"Lattice_TDC: WARNING: No corrections applied"<<endl;
     useCorrections = false;
   }
   else {
@@ -69,7 +69,9 @@ Unpacker_Lattice_TDC::Unpacker_Lattice_TDC(string bT, string bA, string hA, int 
     file->Close();
   }
   
-  cerr<<"Lattice_TDC: Creating Unpacker_Lattice_TDC for board type: "<<bT<<" board address "<<bA<<" hub address "<<hA<<" number of channels "<<channelNumber<<endl;
+  if(debugMode == true){
+    cerr<<"Lattice_TDC: Creating Unpacker_Lattice_TDC for board type: "<<bT<<" board address "<<bA<<" hub address "<<hA<<" number of channels "<<channelNumber<<endl;
+  }
 }
 
 Unpacker_Lattice_TDC::~Unpacker_Lattice_TDC() {

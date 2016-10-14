@@ -76,27 +76,27 @@ public:
 
 
   // part of Lattice_TDC unpacking interface
-  virtual int GetLeadMult(int channel) { return -1; }
-  virtual int GetLeadFineTime(int channel, int mult) { return -1; }
-  virtual int GetLeadCoarseTime(int channel, int mult) { return -1; }
-  virtual int GetLeadEpoch(int channel, int mult) { return -1; }
+  virtual int GetLeadMult(int /*channel*/) { return -1; }
+  virtual int GetLeadFineTime(int /*channel*/, int /*mult*/) { return -1; }
+  virtual int GetLeadCoarseTime(int /*channel*/, int /*mult*/) { return -1; }
+  virtual int GetLeadEpoch(int /*channel*/, int /*mult*/) { return -1; }
 
-  virtual int GetTrailMult(int channel) { return -1; }
-  virtual int GetTrailFineTime(int channel, int mult) { return -1; }
-  virtual int GetTrailCoarseTime(int channel, int mult) { return -1; }
-  virtual int GetTrailEpoch(int channel, int mult) { return -1; }
+  virtual int GetTrailMult(int /*channel*/) { return -1; }
+  virtual int GetTrailFineTime(int /*channel*/, int /*mult*/) { return -1; }
+  virtual int GetTrailCoarseTime(int /*channel*/, int /*mult*/) { return -1; }
+  virtual int GetTrailEpoch(int /*channel*/, int /*mult*/) { return -1; }
 
-  virtual void SetReferenceChannel(int t) {}
+  virtual void SetReferenceChannel(int /*t*/) {}
   virtual UInt_t GetErrorBits() { return -1; }
 
 
   // part of ADC unpacking interface
-  virtual Int_t GetSample(Int_t channel, Int_t sampleNr) {return -1; }
-  virtual Int_t GetDspSum(Int_t channel) {return -1; }
-  virtual Int_t GetDspMean(Int_t channel) {return -1; }
-  virtual Int_t GetDspCfA(Int_t channel) {return -1; }
-  virtual Int_t GetDspCfB(Int_t channel) {return -1; }
-  virtual Int_t GetDspCfT(Int_t channel) {return -1; }
+  virtual Int_t GetSample(Int_t /*channel*/, Int_t /*sampleNr*/) {return -1; }
+  virtual Int_t GetDspSum(Int_t /*channel*/) {return -1; }
+  virtual Int_t GetDspMean(Int_t /*channel*/) {return -1; }
+  virtual Int_t GetDspCfA(Int_t /*channel*/) {return -1; }
+  virtual Int_t GetDspCfB(Int_t /*channel*/) {return -1; }
+  virtual Int_t GetDspCfT(Int_t /*channel*/) {return -1; }
   virtual Int_t GetNumberOfSamples() {return -1; }
  
   UInt_t ReverseHex(UInt_t n);

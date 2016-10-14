@@ -107,13 +107,13 @@ void Unpacker_TRB3::GetTDCHits() {
 //								cerr<<"Unpacker_TRB3.cc: Adding referenceTime at position "<<(iter->second->GetChannelOffset() + i)<<endl;
 						}
 					
-						for(UInt_t j = 0; j < iter->second->GetLeadMult(i); j++){
+						for(Int_t j = 0; j < iter->second->GetLeadMult(i); j++){
 							hit->AddLeadTime(iter->second->GetLeadFineTime(i, j), iter->second->GetLeadCoarseTime(i, j), iter->second->GetLeadEpoch(i, j));
 						}
 					}
 			
 					if(iter->second->GetTrailMult(i) > 0) {
-						for(UInt_t j = 0; j < iter->second->GetTrailMult(i); j++) {
+						for(Int_t j = 0; j < iter->second->GetTrailMult(i); j++) {
 							hit->AddTrailTime(iter->second->GetTrailFineTime(i, j), iter->second->GetTrailCoarseTime(i, j), iter->second->GetTrailEpoch(i, j));
 						}
 					}

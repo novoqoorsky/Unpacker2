@@ -243,4 +243,4 @@ void Unpacker_Lattice_TDC::ProcessEvent(UInt_t* data) {
   }
 }
 
-void Unpacker_Lattice_TDC::ProcessEvent(UInt_t* data, Event* evt) { }
+void Unpacker_Lattice_TDC::ProcessEvent(UInt_t* /*data*/, Event* /*evt*/) { }

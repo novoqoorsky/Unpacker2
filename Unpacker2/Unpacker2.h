@@ -18,7 +18,7 @@ class Unpacker2 : public TObject {
   
 private:
   
-  map<std::string, UnpackingModule*> unpackers;
+  std::map<std::string, UnpackingModule*> unpackers;
   
   int eventsToAnalyze;
   

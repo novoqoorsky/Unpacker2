@@ -1,5 +1,7 @@
 #include "UnpackingModule.h"
 
+using namespace std;
+
 UnpackingModule::UnpackingModule(string bT, string bA, string hA, int cN, int o, int r, string mR, bool dec, bool dbg) {
   boardType = bT;
   boardAddress = bA;

@@ -33,13 +33,13 @@ private:
 public:
   
   Unpacker_Lattice_TDC() { }
-  Unpacker_Lattice_TDC(string bT, string bA, string hA, int cN, int o, int r, string mR, bool dec, bool dbg, string cF);
+  Unpacker_Lattice_TDC(std::string bT, std::string bA, std::string hA, int cN, int o, int r, std::string mR, bool dec, bool dbg, std::string cF);
   ~Unpacker_Lattice_TDC();
   
   void ProcessEvent(UInt_t* data);
   void ProcessEvent(UInt_t* data, Event* evt);
   
-  void SayHi() { cerr<<"Lattice_TDC: Hi from Lattice_TDC"<<endl; }
+  void SayHi() { std::cerr<<"Lattice_TDC: Hi from Lattice_TDC"<<std::endl; }
   
   int GetLeadMult(int channel) { return leadMult[channel]; }
   int GetLeadFineTime(int channel, int mult) { return leadFineTimes[channel][mult]; }

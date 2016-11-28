@@ -26,8 +26,6 @@ public:
   
   void Clear() {}
   
-  ClassDef(Unpacker_TRB3, 1);
-  
 };
 
 #endif

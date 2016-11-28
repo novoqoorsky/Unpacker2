@@ -3,10 +3,10 @@
 
 using namespace std;
 
-ClassImp(Unpacker_TRB3);
-
 Unpacker_TRB3::Unpacker_TRB3(string bT, string bA, string hA, int cN, int o, int r, string mR, bool dec, bool dbg) : UnpackingModule(bT, bA, hA, cN, o, r, mR, dec, dbg) {
-  cerr<<"TRB3: Creating Unpacker_TRB3 for board type: "<<bT<<" board address "<<bA<<" hub address "<<hA<<endl;
+  if(debugMode == true){
+    cerr<<"TRB3: Creating Unpacker_TRB3 for board type: "<<bT<<" board address "<<bA<<" hub address "<<hA<<endl;
+  }
 }
 
 void Unpacker_TRB3::ProcessEvent(UInt_t* data, Event* evt) {
@@ -107,13 +107,13 @@ void Unpacker_TRB3::GetTDCHits() {
 //								cerr<<"Unpacker_TRB3.cc: Adding referenceTime at position "<<(iter->second->GetChannelOffset() + i)<<endl;
 						}
 					
-						for(UInt_t j = 0; j < iter->second->GetLeadMult(i); j++){
+						for(Int_t j = 0; j < iter->second->GetLeadMult(i); j++){
 							hit->AddLeadTime(iter->second->GetLeadFineTime(i, j), iter->second->GetLeadCoarseTime(i, j), iter->second->GetLeadEpoch(i, j));
 						}
 					}
 			
 					if(iter->second->GetTrailMult(i) > 0) {
-						for(UInt_t j = 0; j < iter->second->GetTrailMult(i); j++) {
+						for(Int_t j = 0; j < iter->second->GetTrailMult(i); j++) {
 							hit->AddTrailTime(iter->second->GetTrailFineTime(i, j), iter->second->GetTrailCoarseTime(i, j), iter->second->GetTrailEpoch(i, j));
 						}
 					}

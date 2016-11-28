@@ -1,7 +1,5 @@
 #include "UnpackingModule.h"
 
-ClassImp(UnpackingModule);
-
 UnpackingModule::UnpackingModule(string bT, string bA, string hA, int cN, int o, int r, string mR, bool dec, bool dbg) {
   boardType = bT;
   boardAddress = bA;
@@ -15,9 +13,9 @@ UnpackingModule::UnpackingModule(string bT, string bA, string hA, int cN, int o,
   debugMode = dbg;
 }
 
-void UnpackingModule::ProcessEvent(UInt_t* data) { }
+void UnpackingModule::ProcessEvent(UInt_t* /*data*/) { }
 
-void UnpackingModule::ProcessEvent(UInt_t* data, Event* evt) { cerr<<"Doin shit"<<endl; }
+void UnpackingModule::ProcessEvent(UInt_t* /*data*/, Event* /*evt*/) {}
 
 void UnpackingModule::SayHi() { cerr<<"Hi from Unpacking Module"<<endl; }
 

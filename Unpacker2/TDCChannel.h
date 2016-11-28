@@ -6,15 +6,14 @@
 #include <TClonesArray.h>
 #include <iostream>
 #include <vector>
-using namespace std;
 
 class TDCChannel : public TObject {
 
 protected:
   Int_t channel;
   
-  vector<double> leadTimes;
-  vector<double> trailTimes;
+  std::vector<double> leadTimes;
+  std::vector<double> trailTimes;
   int hitsNum;
 
   

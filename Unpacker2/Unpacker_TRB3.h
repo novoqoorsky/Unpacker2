@@ -12,7 +12,7 @@ private:
 public:
   
   Unpacker_TRB3() {}
-  Unpacker_TRB3(string bT, string bA, string hA, int cN, int o, int r, string mR, bool dec, bool dbg);
+  Unpacker_TRB3(std::string bT, std::string bA, std::string hA, int cN, int o, int r, std::string mR, bool dec, bool dbg);
   ~Unpacker_TRB3() {}
   
   void ProcessEvent(UInt_t* data, Event* evt);
@@ -22,7 +22,7 @@ public:
   
   void SetReferenceChannel(int t) { referenceChannel = t; }
   
-  void SayHi() { cerr<<"Hi from TRB3"<<endl; }
+  void SayHi() { std::cerr<<"Hi from TRB3"<<std::endl; }
   
   void Clear() {}
   

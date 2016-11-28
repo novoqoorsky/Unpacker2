@@ -8,28 +8,26 @@
 #include "Event.h"
 #include <sstream>
 
-using namespace std;
-
 class UnpackingModule : public TObject {
 
 private:
-  string boardType;
-  string boardAddress;
-  string hubAddress;
+  std::string boardType;
+  std::string boardAddress;
+  std::string hubAddress;
   int channelNumber;
   int channelOffset;
   int resolution;
-  string measurementType;
+  std::string measurementType;
   size_t entireEventSize;
   
   bool invertBytes;
   
-  map<std::string, UnpackingModule*> internalUnpackers;
+  std::map<std::string, UnpackingModule*> internalUnpackers;
  
 public:
   
   UnpackingModule() {}
-  UnpackingModule(string bT, string bA, string hA, int cN, int o, int r, string mR, bool dec, bool dbg);
+  UnpackingModule(std::string bT, std::string bA, std::string hA, int cN, int o, int r, std::string mR, bool dec, bool dbg);
   ~UnpackingModule() {}
   
   void AddUnpacker(std::string s, UnpackingModule* u) { internalUnpackers[s] = u; }
@@ -40,22 +38,22 @@ public:
       return NULL;
   }
   
-  void SetBoardType(string t) { boardType = t; }
-  void SetBoardAddress(string t) { boardAddress = t; }
-  void SetHubAddress(string t) { hubAddress = t; }
+  void SetBoardType(std::string t) { boardType = t; }
+  void SetBoardAddress(std::string t) { boardAddress = t; }
+  void SetHubAddress(std::string t) { hubAddress = t; }
   void SetChannelNumber(int t) { channelNumber = t; }
   void SetResolution(int t) { resolution = t; }
-  void SetMeasurementType(string t) { measurementType = t; }
+  void SetMeasurementType(std::string t) { measurementType = t; }
   void SetInvertBytes(bool dec) { invertBytes = dec; }
   void SetEntireEventSize(size_t s) { entireEventSize = s; }
   
-  string GetBoardType() { return boardType; }
-  string GetBoardAddress() { return boardAddress; }
-  string GetHubAddress() { return hubAddress; }
+  std::string GetBoardType() { return boardType; }
+  std::string GetBoardAddress() { return boardAddress; }
+  std::string GetHubAddress() { return hubAddress; }
   int GetChannelNumber() { return channelNumber; }
   int GetChannelOffset() { return channelOffset; }
   int GetResolution() { return resolution; }
-  string GetMeasurementType() { return measurementType; }
+  std::string GetMeasurementType() { return measurementType; }
   bool GetInvertBytes() { return invertBytes; }
   size_t GetEntireEventSize() { return entireEventSize; }
   
@@ -69,10 +67,10 @@ public:
   
   virtual void Clear();
  
-  string UIntToString(UInt_t t);
+  std::string UIntToString(UInt_t t);
   
-  map<std::string, UnpackingModule*>::iterator GetInternalUnpackersIterBegin() { return internalUnpackers.begin(); }
-  map<std::string, UnpackingModule*>::iterator GetInternalUnpackersIterEnd() { return internalUnpackers.end(); }
+  std::map<std::string, UnpackingModule*>::iterator GetInternalUnpackersIterBegin() { return internalUnpackers.begin(); }
+  std::map<std::string, UnpackingModule*>::iterator GetInternalUnpackersIterEnd() { return internalUnpackers.end(); }
 
 
   // part of Lattice_TDC unpacking interface

@@ -11,15 +11,6 @@ TDCHit::TDCHit() {
   leadsNum = 0;
   trailsNum = 0;
     
-  for (int i = 0; i < MAX_HITS; i++) {
-    leadFineTimes[i] = -100000;
-    leadCoarseTimes[i] = -100000;
-    leadEpochs[i] = -100000;
-
-    trailFineTimes[i] = -100000;
-    trailCoarseTimes[i] = -100000;
-    trailEpochs[i] = -100000;
-  }
 }
 
 TDCHit::~TDCHit() {

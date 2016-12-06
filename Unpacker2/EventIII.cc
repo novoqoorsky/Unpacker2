@@ -8,7 +8,7 @@ ClassImp(EventIII);
 EventIII::EventIII() : TNamed("EventIII", "EventIII") {   
   TDCChannels = new TClonesArray("TDCChannel", 2100);
   
-  TDCChannels->Delete();
+  TDCChannels->Clear();
   
   totalNTDCChannels = 0;
 }
@@ -22,6 +22,6 @@ TDCChannel* EventIII::AddTDCChannel(int channel) {
 
 
 void EventIII::Clear(void) {  
-  TDCChannels->Delete();
-	totalNTDCChannels = 0;
+  TDCChannels->Clear();
+  totalNTDCChannels = 0;
 }

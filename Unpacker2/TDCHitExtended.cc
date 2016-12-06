@@ -13,22 +13,6 @@ TDCHitExtended::TDCHitExtended() {
 
   timeLineSize = 0;
     
-  for (int i = 0; i < MAX_HITS * 2; i++) {
-    leadFineTimes[i] = -100000;
-    leadCoarseTimes[i] = -100000;
-    leadEpochs[i] = -100000;
-
-    trailFineTimes[i] = -100000;
-    trailCoarseTimes[i] = -100000;
-    trailEpochs[i] = -100000;
-
-    fineTimeLine[i] = -100000;
-    coarseTimeLine[i] = -100000;
-    epochTimeLine[i] = -100000;
-    shortTimeLine[i] = -100000;
-    absoluteTimeLine[i] = -100000;
-    riseTimeLine[i] = -100000;
-  }
 }
 
 TDCHitExtended::~TDCHitExtended() {

@@ -103,23 +103,10 @@ Unpacker_Lattice_TDC::~Unpacker_Lattice_TDC() {
 
 void Unpacker_Lattice_TDC::Clear() {
   for(int i = 0; i < channelNumber; i++) {
-		delete [] leadFineTimes[i];
-		delete [] leadCoarseTimes[i];
-		delete [] leadEpochs[i];
-		
-		delete [] trailFineTimes[i];
-		delete [] trailCoarseTimes[i];
-		delete [] trailEpochs[i];
     
 		leadMult[i] = 0;
-		leadFineTimes[i] = new int[MAX_HITS]; 
-		leadCoarseTimes[i] = new int[MAX_HITS];
-		leadEpochs[i] = new int[MAX_HITS];
-		
 		trailMult[i] = 0;
-		trailFineTimes[i] = new int[MAX_HITS]; 
-		trailCoarseTimes[i] = new int[MAX_HITS];
-		trailEpochs[i] = new int[MAX_HITS];
+
   }
 
 	actualEpoch = -100000;

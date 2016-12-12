@@ -1,17 +1,18 @@
-
-
 UNPACKER2:
 
 About:
 Tool to unpack the HADES-like .hld binary data into ROOT tree structure.
 
-Installation:
-- Download the Unpacker2 directory
-- compile in the tinyxml directory
-  - g++ -c tinyxml2.cpp
-  - ar rvs tinyxml2.a tinyxml2.o
-- run make in the Unpacker2 directory
+Prerequisite:
+- tinyxml2 installed
 
+Installation:
+- Download Unpacker2 directory
+- Enter Unpacker2 directory
+- mkdir build 
+- cd build
+- cmake ..
+- make 
 - Download the tools2 directory
 - Adjust the path the Unpacker2 library in rootlogon.c
 

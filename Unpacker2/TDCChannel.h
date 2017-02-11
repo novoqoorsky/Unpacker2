@@ -42,13 +42,9 @@ public:
 
   int GetMult() { return hitsNum; }
 
-
-
-
+  void Clear(Option_t * opt);
   
-
-
-  ClassDef(TDCChannel,1);
+  ClassDef(TDCChannel,2);
 };
 
 #endif

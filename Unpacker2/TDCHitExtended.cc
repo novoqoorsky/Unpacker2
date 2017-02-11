@@ -36,3 +36,14 @@ void TDCHitExtended::PrintOut() {
 		printf("%f\n", absoluteTimeLine[i]);
 	}
 }
+
+void TDCHitExtended::Clear(Option_t *){
+  
+  channel = -1;
+  
+  leadsNum = 0;
+  trailsNum = 0;
+  
+  timeLineSize = 0;
+  
+}

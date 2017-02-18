@@ -17,17 +17,26 @@ TDCHit::~TDCHit() {
 }
 
 void TDCHit::AddLeadTime(int fine, int coarse, int epoch) {
-	leadFineTimes[leadsNum] = fine;
-	leadCoarseTimes[leadsNum] = coarse;
-	leadEpochs[leadsNum] = epoch;
-
-	leadsNum++;
+  leadFineTimes[leadsNum] = fine;
+  leadCoarseTimes[leadsNum] = coarse;
+  leadEpochs[leadsNum] = epoch;
+  
+  leadsNum++;
 }
 
 void TDCHit::AddTrailTime(int fine, int coarse, int epoch) {
-	trailFineTimes[trailsNum] = fine;
-	trailCoarseTimes[trailsNum] = coarse;
-	trailEpochs[trailsNum] = epoch;
+  trailFineTimes[trailsNum] = fine;
+  trailCoarseTimes[trailsNum] = coarse;
+  trailEpochs[trailsNum] = epoch;
+  
+  trailsNum++;
+}
 
-	trailsNum++;
+void TDCHit::Clear(Option_t *){
+
+  channel = -1;
+  
+  leadsNum = 0;
+  trailsNum = 0;
+  
 }

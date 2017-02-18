@@ -27,23 +27,24 @@ public:
   
   void SetChannel(Int_t channel) { this->channel = channel; }
   
-	void AddLeadTime(int fine, int coarse, int epoch);
-	void AddTrailTime(int fine, int coarse, int epoch);
+  void AddLeadTime(int fine, int coarse, int epoch);
+  void AddTrailTime(int fine, int coarse, int epoch);
+  
+  int GetChannel() { return channel; }
+  
+  int GetLeadsNum() { return leadsNum; }
+  int GetLeadFine(int mult) { return leadFineTimes[mult]; }
+  int GetLeadCoarse(int mult) { return leadCoarseTimes[mult]; }
+  int GetLeadEpoch(int mult) { return leadEpochs[mult]; }
+  
+  int GetTrailsNum() { return trailsNum; }
+  int GetTrailFine(int mult) { return trailFineTimes[mult]; }
+  int GetTrailCoarse(int mult) { return trailCoarseTimes[mult]; }
+  int GetTrailEpoch(int mult) { return trailEpochs[mult]; }
 
-	int GetChannel() { return channel; }
-
-	int GetLeadsNum() { return leadsNum; }
-	int GetLeadFine(int mult) { return leadFineTimes[mult]; }
-	int GetLeadCoarse(int mult) { return leadCoarseTimes[mult]; }
-	int GetLeadEpoch(int mult) { return leadEpochs[mult]; }
-
-	int GetTrailsNum() { return trailsNum; }
-	int GetTrailFine(int mult) { return trailFineTimes[mult]; }
-	int GetTrailCoarse(int mult) { return trailCoarseTimes[mult]; }
-	int GetTrailEpoch(int mult) { return trailEpochs[mult]; }
-
-
-  ClassDef(TDCHit,1);
+  void Clear(Option_t * opt);
+  
+  ClassDef(TDCHit,2);
 };
 
 #endif

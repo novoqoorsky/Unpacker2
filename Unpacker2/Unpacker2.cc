@@ -89,7 +89,7 @@ void Unpacker2::ParseConfigFile(string f, string s) {
   doc.LoadFile(s.c_str());
   
   if (doc.ErrorID() != 0) {
-   cerr<<"ERROR: failed to open config file"<<endl; 
+   cerr<<"ERROR: failed to open config file"<<endl;
    exit(0);
   }
   
@@ -263,7 +263,7 @@ void Unpacker2::DistributeEvents(string f) {
 	if(debugMode == true)
 	  cerr<<"Unpacker2.cc: Ignoring "<<(getPaddedSize() - getDataSize())<<" bytes and reducing eventSize by "<<getDataSize(); 
 	
-	delete pData;
+	delete[] pData;
 	
 	// remove the padding bytes
 	file->ignore(getPaddedSize() - getDataSize());
@@ -406,7 +406,7 @@ void Unpacker2::DistributeEventsSingleStep(string filename) {
 	if(debugMode == true)
 	  cerr<<"Unpacker2.cc: Ignoring "<<(getPaddedSize() - getDataSize())<<" bytes and reducing eventSize by "<<getDataSize(); 
 	
-	delete pData;
+	delete[] pData;
 	
 	// remove the padding bytes
 	file->ignore(getPaddedSize() - getDataSize());

@@ -24,8 +24,8 @@ endif()
 include_directories(${ROOT_INCLUDE_DIRS})
 add_definitions(${ROOT_DEFINITIONS})
 
-find_package(TinyXML REQUIRED)
-include_directories(${TINYXML_INCLUDE_DIRS})
+find_package(Boost 1.50.0 REQUIRED)
+#include_directories(${TINYXML_INCLUDE_DIRS})
 
 file(GLOB HEADERS *.h)
 file(GLOB SOURCES *.cc)
@@ -49,7 +49,7 @@ endforeach()
 add_library(Unpacker2 SHARED ${SOURCES} ${HEADERS})
 
 target_link_libraries(Unpacker2
-  ${TINYXML_LIBRARIES}
+  ${Boost_LIBRARIES}
   ${ROOT_LIBRARIES}
   )
 

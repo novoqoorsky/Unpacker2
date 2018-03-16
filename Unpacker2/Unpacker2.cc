@@ -234,36 +234,36 @@ void Unpacker2::DistributeEvents(string f) {
 
           GetUnpacker(getHubAddress())->GetTDCHits();
 //	  GetUnpacker(getHubAddress())->GetADCHits();
+	
+	}
+	else if((*pData) == 0) {
+	  cerr<<"WARNING: First data word empty, skipping event nr "<<analyzedEvents<<endl;
+	}
+	else if(u == NULL) {
+	  cerr<<"ERROR: Unpacker not found for address: "<<getHubAddress()<<endl;
+	  exit(1);
+	}
 
-        }
-        else if((*pData) == 0) {
-          cerr<<"WARNING: First data word empty, skipping event nr "<<analyzedEvents<<endl;
-        }
-        else if(u == NULL) {
-          cerr<<"ERROR: Unpacker not found for address: "<<getHubAddress()<<endl;
-          exit(1);
-        }
+	if(debugMode == true)
+	  cerr<<"Unpacker2.cc: Ignoring "<<(getPaddedSize() - getDataSize())<<" bytes and reducing eventSize by "<<getDataSize(); 
+	
+	delete[] pData;
+	
+	// remove the padding bytes
+	file->ignore(getPaddedSize() - getDataSize());
+	
+	eventSize -= getDataSize();
+	
+	if(debugMode == true)
+	  cerr<<" leaving eventSize of "<<eventSize<<endl;
+	
+	if(eventSize <= 48 && fullSetup == false) { break; }
+	
+	eventSize -= getPaddedSize() - getDataSize();
+	
+	if((eventSize <= 64) && fullSetup == true) { break; }
 
-        if(debugMode == true)
-          cerr<<"Unpacker2.cc: Ignoring "<<(getPaddedSize() - getDataSize())<<" bytes and reducing eventSize by "<<getDataSize();
-
-        delete[] pData;
-
-        // remove the padding bytes
-        file->ignore(getPaddedSize() - getDataSize());
-
-        eventSize -= getDataSize();
-
-        if(debugMode == true)
-          cerr<<" leaving eventSize of "<<eventSize<<endl;
-
-        if(eventSize <= 48 && fullSetup == false) { break; }
-
-        eventSize -= getPaddedSize() - getDataSize();
-
-        if((eventSize <= 64) && fullSetup == true) { break; }
-
-        if((eventSize <= 176) && fullSetup == true) { break; }
+	if((eventSize <= 176) && fullSetup == true) { break; }
 
       }
 
@@ -377,36 +377,36 @@ void Unpacker2::DistributeEventsSingleStep(string filename) {
 
           GetUnpacker(getHubAddress())->GetTDCHits();
 //	  GetUnpacker(getHubAddress())->GetADCHits();
+	
+	}
+	else if((*pData) == 0) {
+	  cerr<<"WARNING: First data word empty, skipping event nr "<<analyzedEvents<<endl;
+	}
+	else if(u == NULL) {
+	  cerr<<"ERROR: Unpacker not found for address: "<<getHubAddress()<<endl;
+	  exit(1);
+	}
 
-        }
-        else if((*pData) == 0) {
-          cerr<<"WARNING: First data word empty, skipping event nr "<<analyzedEvents<<endl;
-        }
-        else if(u == NULL) {
-          cerr<<"ERROR: Unpacker not found for address: "<<getHubAddress()<<endl;
-          exit(1);
-        }
+	if(debugMode == true)
+	  cerr<<"Unpacker2.cc: Ignoring "<<(getPaddedSize() - getDataSize())<<" bytes and reducing eventSize by "<<getDataSize(); 
+	
+	delete[] pData;
+	
+	// remove the padding bytes
+	file->ignore(getPaddedSize() - getDataSize());
+	
+	eventSize -= getDataSize();
+	
+	if(debugMode == true)
+	  cerr<<" leaving eventSize of "<<eventSize<<endl;
+	
+	if(eventSize <= 48 && fullSetup == false) { break; }
+	
+	eventSize -= getPaddedSize() - getDataSize();
+	
+	if((eventSize <= 64) && fullSetup == true) { break; }
 
-        if(debugMode == true)
-          cerr<<"Unpacker2.cc: Ignoring "<<(getPaddedSize() - getDataSize())<<" bytes and reducing eventSize by "<<getDataSize();
-
-        delete[] pData;
-
-        // remove the padding bytes
-        file->ignore(getPaddedSize() - getDataSize());
-
-        eventSize -= getDataSize();
-
-        if(debugMode == true)
-          cerr<<" leaving eventSize of "<<eventSize<<endl;
-
-        if(eventSize <= 48 && fullSetup == false) { break; }
-
-        eventSize -= getPaddedSize() - getDataSize();
-
-        if((eventSize <= 64) && fullSetup == true) { break; }
-
-        if((eventSize <= 176) && fullSetup == true) { break; }
+	if((eventSize <= 176) && fullSetup == true) { break; }
 
       }
 

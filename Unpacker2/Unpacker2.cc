@@ -54,8 +54,7 @@ void Unpacker2::UnpackSingleStep(const char* hldFile, const char* configFile, in
 
 }
 
-void Unpacker2::ParseConfigFile(string f, string s) {
-
+void Unpacker2::areBytesToBeInverted(string f) {
   // open the data file to check the byte ordering
   ifstream* file = new ifstream(f.c_str());
 
@@ -78,7 +77,11 @@ void Unpacker2::ParseConfigFile(string f, string s) {
     fileSize = file->tellg();
   }
   file->close();
+}
 
+void Unpacker2::ParseConfigFile(string f, string s) {
+
+  areBytesToBeInverted(f);
 
   // parsing xml config file
   boost::property_tree::ptree tree;
@@ -109,11 +112,11 @@ void Unpacker2::ParseConfigFile(string f, string s) {
   string address;
   string hubAddress;
   string correctionFile;
-  int channels;
-  int offset;
-  int resolution;
-  int referenceChannel;
-  string measurementType;
+  int channels = 0;
+  int offset = 0;
+  int resolution = 0;
+  int referenceChannel = 0;
+  string measurementType("");
   UnpackingModule* m;
 
   // iterate through entries and create appropriate unpackers
@@ -129,7 +132,7 @@ void Unpacker2::ParseConfigFile(string f, string s) {
 
       if (type == "TRB3_S") {
 
-        m = new Unpacker_TRB3(type, address, hubAddress, 0, 0, 0, "", invertBytes, debugMode);
+        m = new Unpacker_TRB3(type, address, hubAddress, channels, offset, resolution, measurementType, invertBytes, debugMode);
         m->SetReferenceChannel(referenceChannel);
 
         // create additional unpackers for internal modules
@@ -142,18 +145,19 @@ void Unpacker2::ParseConfigFile(string f, string s) {
           resolution = (module.second).get<int>("RESOLUTION");
           measurementType = (module.second).get<string>("MEASUREMENT_TYPE");
 
+          UnpackingModule* submodule = 0;
           if (type == "LATTICE_TDC") {
-            m->AddUnpacker(address, new Unpacker_Lattice_TDC(type, address, hubAddress, channels, offset, resolution,
-                                                             measurementType, invertBytes, debugMode, correctionFile));
+            submodule = new Unpacker_Lattice_TDC(type, address, hubAddress, channels, offset, resolution,
+                                                 measurementType, invertBytes, debugMode, correctionFile);
           } else {
-            m->AddUnpacker(address,
-                           new UnpackingModule(type, address, hubAddress, channels, offset, resolution, measurementType,
-                                               invertBytes, debugMode));
+            submodule = new UnpackingModule(type, address, hubAddress, channels, offset, resolution,
+                                            measurementType, invertBytes, debugMode);
           }
+          m -> AddUnpacker(address, submodule);
         }
       } else { // default type
-        m = new UnpackingModule(type, address, hubAddress, 0, 0, 0, "", invertBytes, debugMode);
-        cerr << "  -- Creating UnpakingModule for unassigned type" << endl;
+        m = new UnpackingModule(type, address, hubAddress, channels, offset, resolution, measurementType, invertBytes, debugMode);
+        cerr << "  -- Creating UnpackingModule for unassigned type" << endl;
       }
 
       // add the module to the list

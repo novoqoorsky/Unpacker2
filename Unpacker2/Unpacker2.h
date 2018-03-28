@@ -24,7 +24,7 @@ private:
   
   size_t reverseHex(size_t n);
 
-  void areBytesToBeInverted(std::string);
+  bool areBytesToBeInverted(std::string);
   bool invertBytes;
   bool fullSetup;
   

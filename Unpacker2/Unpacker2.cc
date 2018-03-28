@@ -54,7 +54,8 @@ void Unpacker2::UnpackSingleStep(const char* hldFile, const char* configFile, in
 
 }
 
-void Unpacker2::areBytesToBeInverted(string f) {
+bool Unpacker2::areBytesToBeInverted(string f) {
+  bool invert = false;
   // open the data file to check the byte ordering
   ifstream* file = new ifstream(f.c_str());
 
@@ -69,7 +70,7 @@ void Unpacker2::areBytesToBeInverted(string f) {
     subPHdr = (UInt_t*) &subHdr;
     file->read((char *) (subPHdr), getSubHdrSize());
     if(((SubEventHdr*)subPHdr)->decoding == 16777728) {
-      invertBytes = true;
+      invert = true;
     }
 
     // find the size of the file
@@ -77,11 +78,12 @@ void Unpacker2::areBytesToBeInverted(string f) {
     fileSize = file->tellg();
   }
   file->close();
+  return invert;
 }
 
 void Unpacker2::ParseConfigFile(string f, string s) {
 
-  areBytesToBeInverted(f);
+  invertBytes = areBytesToBeInverted(f);
 
   // parsing xml config file
   boost::property_tree::ptree tree;

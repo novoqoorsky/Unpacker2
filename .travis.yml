@@ -10,13 +10,15 @@ install:
   - sudo apt-get install -y git
   - sudo apt-get install -y libboost-all-dev 
   - sudo apt-get install -y cmake 
-  - sudo apt-get install -y doxygen
   - sudo apt-get install -y root-system
-  - sudo apt-get install -y libfftw3-3 libfftw3-dev
 script:
+    - cd Unpacker2
     - mkdir build
     - cd build
     - cmake ..
+    - make tests
+    - cd tests
+    - ./run_tests.pl
 notifications:
   email:
     - aleksander.gajos@doctoral.uj.edu.pl

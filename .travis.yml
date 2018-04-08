@@ -19,6 +19,8 @@ script:
     - make tests
     - cd tests
     - ./run_tests.pl
+    - chmod a+x parseXML.py
+    - ./parseXML.py
 notifications:
   email:
     - aleksander.gajos@doctoral.uj.edu.pl

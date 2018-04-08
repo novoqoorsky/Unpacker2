@@ -18,7 +18,7 @@ script:
     - cmake ..
     - make tests
     - cd tests
-    - ./run_tests.pl
+    - ./run_tests.pl -f xml
     - chmod a+x parseXML.py
     - ./parseXML.py
 notifications:

@@ -46,8 +46,5 @@ foreach my $test (@tests) {
   }
   close $handler;
   print $run_command;
-#  `$run_command`;
-
 }
 
-#system("cd ./ROOTExamples/; ./run_tests.sh")

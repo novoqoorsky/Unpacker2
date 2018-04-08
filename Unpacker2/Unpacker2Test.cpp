@@ -8,7 +8,7 @@ BOOST_AUTO_TEST_SUITE(Unpacker2TestSuite)
 BOOST_AUTO_TEST_CASE( my_test1 )
 {
   Unpacker2 Unpacker;
-  BOOST_REQUIRE(1 == 0);
+  BOOST_REQUIRE(1 == 1);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

@@ -80,4 +80,4 @@ foreach(test_source ${UNIT_TEST_SOURCES})
           )
 endforeach()
 
-add_custom_target(tests DEPENDS ${test_binaries} Unpacker2) 
+add_custom_target(unpacker_tests DEPENDS ${test_binaries} Unpacker2) 
